@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "Barbería App",
+    "slug": "barberia-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "backgroundColor": "#2c3e50",
+      "resizeMode": "contain"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.barberia.app"
+    },
+    "android": {
+      "package": "com.barberia.app",
+      "backgroundColor": "#2c3e50"
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}
