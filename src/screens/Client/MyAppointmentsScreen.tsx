@@ -14,7 +14,9 @@ export default function MyAppointmentsScreen() {
   const { user } = useAuth();
   const { getUserAppointments } = useAppointments();
 
-  const appointments = getUserAppointments(user!.id);
+  if (!user) return null;
+
+  const appointments = getUserAppointments(user.id);
 
   const getStatusColor = (status: string) => {
     switch (status) {

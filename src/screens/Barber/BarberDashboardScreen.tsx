@@ -13,7 +13,9 @@ export default function BarberDashboardScreen({ navigation }: any) {
   const { user } = useAuth();
   const { getBarberAppointments } = useAppointments();
 
-  const appointments = getBarberAppointments(user!.barberId || '1');
+  if (!user) return null;
+
+  const appointments = getBarberAppointments(user.barberId || '1');
   
   const todayAppointments = appointments.filter(apt => {
     const today = new Date().toISOString().split('T')[0];

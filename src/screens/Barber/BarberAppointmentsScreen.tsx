@@ -15,7 +15,9 @@ export default function BarberAppointmentsScreen() {
   const { getBarberAppointments, updateAppointmentStatus } = useAppointments();
   const [filter, setFilter] = useState<'all' | 'pending' | 'confirmed' | 'completed'>('all');
 
-  const allAppointments = getBarberAppointments(user!.barberId || '1');
+  if (!user) return null;
+
+  const allAppointments = getBarberAppointments(user.barberId || '1');
   
   const filteredAppointments = filter === 'all' 
     ? allAppointments 

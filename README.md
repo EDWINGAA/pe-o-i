@@ -1,4 +1,4 @@
-# Barbería App
+# QuickCut
 
 Aplicación móvil para agendar citas en barberías, desarrollada con Expo y React Native.
 

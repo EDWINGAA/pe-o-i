@@ -17,6 +17,8 @@ export default function BookAppointmentScreen({ route, navigation }: any) {
   const { user } = useAuth();
   const { addAppointment } = useAppointments();
 
+  if (!user) return null;
+
   const [selectedService, setSelectedService] = useState<any>(null);
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
@@ -54,9 +56,9 @@ export default function BookAppointmentScreen({ route, navigation }: any) {
     }
 
     addAppointment({
-      clientId: user!.id,
-      clientName: user!.name,
-      clientPhone: user!.phone || '',
+      clientId: user.id,
+      clientName: user.name,
+      clientPhone: user.phone || '',
       barberId: barber.id,
       barberName: barber.name,
       barbershopId: barbershop.id,
@@ -70,16 +72,16 @@ export default function BookAppointmentScreen({ route, navigation }: any) {
     });
 
     Alert.alert(
-      '¡Cita Agendada!',
-      `Tu cita ha sido agendada para el ${selectedDate} a las ${selectedTime}`,
+      '¡Cita Agendada Exitosamente! ✅',
+      `Tu cita ha sido agendada para el ${selectedDate} a las ${selectedTime}.\n\n¡Gracias por confiar en nosotros!`,
       [
         {
           text: 'Ver mis citas',
-          onPress: () => navigation.navigate('MyAppointments')
+          onPress: () => navigation.navigate('ClientTabs', { screen: 'MyAppointments' })
         },
         {
           text: 'Aceptar',
-          onPress: () => navigation.navigate('Home')
+          onPress: () => navigation.navigate('ClientTabs', { screen: 'Home' })
         }
       ]
     );

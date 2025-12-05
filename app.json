@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Barbería App",
-    "slug": "barberia-app",
+    "name": "QuickCut",
+    "slug": "quickcut-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",

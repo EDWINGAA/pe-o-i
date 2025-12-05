@@ -15,6 +15,8 @@ import { Ionicons } from '@expo/vector-icons';
 export default function HomeScreen({ navigation }: any) {
   const { user } = useAuth();
 
+  if (!user) return null;
+
   const renderBarbershopCard = ({ item }: any) => (
     <TouchableOpacity
       style={styles.card}

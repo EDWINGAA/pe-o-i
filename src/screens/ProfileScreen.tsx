@@ -13,6 +13,8 @@ import { useAuth } from '../context/AppContext';
 export default function ProfileScreen() {
   const { user, logout } = useAuth();
 
+  if (!user) return null;
+
   const handleLogout = () => {
     Alert.alert(
       'Cerrar Sesión',

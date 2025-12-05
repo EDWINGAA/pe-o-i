@@ -50,7 +50,7 @@ export default function LoginScreen({ navigation }: any) {
           <View style={styles.logoCircle}>
             <Text style={styles.logoText}>✂️</Text>
           </View>
-          <Text style={styles.title}>Barbería App</Text>
+          <Text style={styles.title}>QuickCut</Text>
           <Text style={styles.subtitle}>Tu próxima cita a un click</Text>
         </View>
 
