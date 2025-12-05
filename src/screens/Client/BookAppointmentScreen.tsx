@@ -19,7 +19,7 @@ export default function BookAppointmentScreen({ route, navigation }: any) {
 
   if (!user) return null;
 
-  const [selectedService, setSelectedService] = useState<any>(null);
+  const [selectedServices, setSelectedServices] = useState<any[]>([]);
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
 
@@ -49,9 +49,44 @@ export default function BookAppointmentScreen({ route, navigation }: any) {
     '18:00', '19:00'
   ];
 
+  const toggleServiceSelection = (service: any) => {
+    const isSelected = selectedServices.some(s => s.id === service.id);
+    
+    if (isSelected) {
+      setSelectedServices(selectedServices.filter(s => s.id !== service.id));
+    } else {
+      // Verificar si se intenta combinar Corte (id: 1) y Premium (id: 2)
+      const hasCorte = selectedServices.some(s => s.id === '1');
+      const hasPremium = selectedServices.some(s => s.id === '2');
+      
+      if ((service.id === '1' && hasPremium) || (service.id === '2' && hasCorte)) {
+        Alert.alert(
+          'Opciones no combinables',
+          'No puedes seleccionar "Corte" y "Premium" en la misma cita. Por favor, elige una u otra opción.',
+          [{ text: 'Entendido' }]
+        );
+        return;
+      }
+      
+      setSelectedServices([...selectedServices, service]);
+    }
+  };
+
+  const getTotalPrice = () => {
+    return selectedServices.reduce((sum, service) => sum + service.price, 0);
+  };
+
+  const getTotalDuration = () => {
+    return selectedServices.reduce((sum, service) => sum + service.duration, 0);
+  };
+
+  const getServicesNames = () => {
+    return selectedServices.map(s => s.name).join(', ');
+  };
+
   const handleBooking = () => {
-    if (!selectedService || !selectedDate || !selectedTime) {
-      Alert.alert('Error', 'Por favor selecciona servicio, fecha y hora');
+    if (selectedServices.length === 0 || !selectedDate || !selectedTime) {
+      Alert.alert('Error', 'Por favor selecciona al menos un servicio, fecha y hora');
       return;
     }
 
@@ -63,12 +98,12 @@ export default function BookAppointmentScreen({ route, navigation }: any) {
       barberName: barber.name,
       barbershopId: barbershop.id,
       barbershopName: barbershop.name,
-      serviceId: selectedService.id,
-      serviceName: selectedService.name,
+      serviceId: selectedServices.map(s => s.id).join(','),
+      serviceName: getServicesNames(),
       date: selectedDate,
       time: selectedTime,
       status: 'pending',
-      price: selectedService.price
+      price: getTotalPrice()
     });
 
     Alert.alert(
@@ -98,29 +133,33 @@ export default function BookAppointmentScreen({ route, navigation }: any) {
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Selecciona un servicio</Text>
-        {mockServices.map((service) => (
-          <TouchableOpacity
-            key={service.id}
-            style={[
-              styles.serviceCard,
-              selectedService?.id === service.id && styles.selectedCard
-            ]}
-            onPress={() => setSelectedService(service)}
-          >
-            <View style={styles.serviceInfo}>
-              <Text style={styles.serviceName}>{service.name}</Text>
-              <Text style={styles.serviceDescription}>{service.description}</Text>
-              <Text style={styles.serviceDuration}>⏱️ {service.duration} min</Text>
-            </View>
-            <View style={styles.servicePrice}>
-              <Text style={styles.priceAmount}>${service.price}</Text>
-              {selectedService?.id === service.id && (
-                <Ionicons name="checkmark-circle" size={24} color="#27ae60" />
-              )}
-            </View>
-          </TouchableOpacity>
-        ))}
+        <Text style={styles.sectionTitle}>Selecciona servicios</Text>
+        <Text style={styles.sectionSubtitle}>Puedes seleccionar múltiples servicios</Text>
+        {mockServices.map((service) => {
+          const isSelected = selectedServices.some(s => s.id === service.id);
+          return (
+            <TouchableOpacity
+              key={service.id}
+              style={[
+                styles.serviceCard,
+                isSelected && styles.selectedCard
+              ]}
+              onPress={() => toggleServiceSelection(service)}
+            >
+              <View style={styles.serviceInfo}>
+                <Text style={styles.serviceName}>{service.name}</Text>
+                <Text style={styles.serviceDescription}>{service.description}</Text>
+                <Text style={styles.serviceDuration}>⏱️ {service.duration} min</Text>
+              </View>
+              <View style={styles.servicePrice}>
+                <Text style={styles.priceAmount}>${service.price}</Text>
+                {isSelected && (
+                  <Ionicons name="checkmark-circle" size={24} color="#27ae60" />
+                )}
+              </View>
+            </TouchableOpacity>
+          );
+        })}
       </View>
 
       <View style={styles.section}>
@@ -169,12 +208,16 @@ export default function BookAppointmentScreen({ route, navigation }: any) {
         </View>
       </View>
 
-      {selectedService && selectedDate && selectedTime && (
+      {selectedServices.length > 0 && selectedDate && selectedTime && (
         <View style={styles.summaryCard}>
           <Text style={styles.summaryTitle}>Resumen de tu cita</Text>
           <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>Servicio:</Text>
-            <Text style={styles.summaryValue}>{selectedService.name}</Text>
+            <Text style={styles.summaryLabel}>Servicios:</Text>
+            <Text style={styles.summaryValue}>{getServicesNames()}</Text>
+          </View>
+          <View style={styles.summaryRow}>
+            <Text style={styles.summaryLabel}>Duración total:</Text>
+            <Text style={styles.summaryValue}>{getTotalDuration()} min</Text>
           </View>
           <View style={styles.summaryRow}>
             <Text style={styles.summaryLabel}>Fecha:</Text>
@@ -185,8 +228,8 @@ export default function BookAppointmentScreen({ route, navigation }: any) {
             <Text style={styles.summaryValue}>{selectedTime}</Text>
           </View>
           <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>Precio:</Text>
-            <Text style={styles.summaryTotal}>${selectedService.price}</Text>
+            <Text style={styles.summaryLabel}>Precio total:</Text>
+            <Text style={styles.summaryTotal}>${getTotalPrice()}</Text>
           </View>
         </View>
       )}
@@ -234,6 +277,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#2c3e50',
+    marginBottom: 5,
+  },
+  sectionSubtitle: {
+    fontSize: 13,
+    color: '#7f8c8d',
     marginBottom: 15,
   },
   serviceCard: {

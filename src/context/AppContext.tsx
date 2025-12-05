@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 import { User, Appointment } from '../types';
-import { mockUsers, mockAppointments } from '../data/mockData';
+import { mockUsers, allAppointments } from '../data/mockData';
 
 interface AuthContextType {
   user: User | null;
@@ -79,7 +79,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 // Provider de citas
 export const AppointmentProvider = ({ children }: { children: ReactNode }) => {
-  const [appointments, setAppointments] = useState<Appointment[]>(mockAppointments);
+  const [appointments, setAppointments] = useState<Appointment[]>(allAppointments);
 
   const addAppointment = (appointment: Omit<Appointment, 'id'>) => {
     const newAppointment: Appointment = {
