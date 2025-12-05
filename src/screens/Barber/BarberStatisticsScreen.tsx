@@ -114,14 +114,14 @@ export default function BarberStatisticsScreen({ navigation }: any) {
   // Datos para gráfica de ingresos (pastel)
   const revenuePieData = [
     {
-      name: 'Ingresos actuales',
+      name: 'Actuales',
       population: currentStats.totalRevenue,
       color: '#27ae60',
       legendFontColor: '#2c3e50',
       legendFontSize: 12,
     },
     {
-      name: 'Ingresos anteriores',
+      name: 'Anteriores',
       population: previousStats.totalRevenue,
       color: '#95a5a6',
       legendFontColor: '#2c3e50',
@@ -132,14 +132,14 @@ export default function BarberStatisticsScreen({ navigation }: any) {
   // Datos para gráfica de clientes (pastel)
   const clientsPieData = [
     {
-      name: 'Clientes actuales',
+      name: 'Actuales',
       population: currentStats.uniqueClients,
       color: '#3498db',
       legendFontColor: '#2c3e50',
       legendFontSize: 12,
     },
     {
-      name: 'Clientes anteriores',
+      name: 'Anteriores',
       population: previousStats.uniqueClients,
       color: '#95a5a6',
       legendFontColor: '#2c3e50',
@@ -150,14 +150,14 @@ export default function BarberStatisticsScreen({ navigation }: any) {
   // Datos para gráfica de citas (pastel)
   const appointmentsPieData = [
     {
-      name: 'Citas actuales',
+      name: 'Actuales',
       population: currentStats.totalAppointments,
       color: '#9b59b6',
       legendFontColor: '#2c3e50',
       legendFontSize: 12,
     },
     {
-      name: 'Citas anteriores',
+      name: 'Anteriores',
       population: previousStats.totalAppointments,
       color: '#95a5a6',
       legendFontColor: '#2c3e50',
@@ -329,7 +329,7 @@ export default function BarberStatisticsScreen({ navigation }: any) {
             color="#9b59b6"
           />
           <MetricCard
-            title="Ticket Promedio"
+            title="Pago Promedio"
             current={currentStats.averageTicket}
             previous={previousStats.averageTicket}
             percentageChange={calculatePercentageChange(
@@ -358,7 +358,6 @@ export default function BarberStatisticsScreen({ navigation }: any) {
                 accessor="population"
                 backgroundColor="transparent"
                 paddingLeft="15"
-                absolute
               />
             ) : (
               <View style={styles.emptyChart}>
@@ -385,7 +384,6 @@ export default function BarberStatisticsScreen({ navigation }: any) {
                 accessor="population"
                 backgroundColor="transparent"
                 paddingLeft="15"
-                absolute
               />
             ) : (
               <View style={styles.emptyChart}>
@@ -412,7 +410,6 @@ export default function BarberStatisticsScreen({ navigation }: any) {
                 accessor="population"
                 backgroundColor="transparent"
                 paddingLeft="15"
-                absolute
               />
             ) : (
               <View style={styles.emptyChart}>
