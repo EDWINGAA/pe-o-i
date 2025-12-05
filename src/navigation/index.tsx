@@ -19,6 +19,7 @@ import MyAppointmentsScreen from '../screens/Client/MyAppointmentsScreen';
 // Barber Screens
 import BarberDashboardScreen from '../screens/Barber/BarberDashboardScreen';
 import BarberAppointmentsScreen from '../screens/Barber/BarberAppointmentsScreen';
+import BarberStatisticsScreen from '../screens/Barber/BarberStatisticsScreen';
 
 // Profile Screen (Shared)
 import ProfileScreen from '../screens/ProfileScreen';
@@ -162,6 +163,7 @@ export default function Navigation() {
         // Barber Stack
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="BarberTabs" component={BarberTabs} />
+          <Stack.Screen name="BarberStatistics" component={BarberStatisticsScreen} />
         </Stack.Navigator>
       )}
     </NavigationContainer>

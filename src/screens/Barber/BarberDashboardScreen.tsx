@@ -144,7 +144,10 @@ export default function BarberDashboardScreen({ navigation }: any) {
             <Ionicons name="chevron-forward" size={20} color="#bdc3c7" />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.actionCard}>
+          <TouchableOpacity 
+            style={styles.actionCard}
+            onPress={() => navigation.navigate('BarberStatistics')}
+          >
             <Ionicons name="stats-chart" size={24} color="#27ae60" />
             <Text style={styles.actionCardText}>Estadísticas</Text>
             <Ionicons name="chevron-forward" size={20} color="#bdc3c7" />
