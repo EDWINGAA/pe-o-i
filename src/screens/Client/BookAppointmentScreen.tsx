@@ -9,13 +9,14 @@ import {
   Image,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useAuth, useAppointments } from '../../context/AppContext';
+import { useAuth, useAppointments, useTheme } from '../../context/AppContext';
 import { mockServices } from '../../data/mockData';
 
 export default function BookAppointmentScreen({ route, navigation }: any) {
   const { barber, barbershop } = route.params;
   const { user } = useAuth();
   const { addAppointment } = useAppointments();
+  const { theme } = useTheme();
 
   if (!user) return null;
 
@@ -123,18 +124,18 @@ export default function BookAppointmentScreen({ route, navigation }: any) {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
+    <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
+      <View style={[styles.header, { backgroundColor: theme.surface }]}>
         <Image source={{ uri: barber.photo }} style={styles.barberPhoto} />
         <View style={styles.barberInfo}>
-          <Text style={styles.barberName}>{barber.name}</Text>
-          <Text style={styles.barbershopName}>{barbershop.name}</Text>
+          <Text style={[styles.barberName, { color: theme.text }]}>{barber.name}</Text>
+          <Text style={[styles.barbershopName, { color: theme.textSecondary }]}>{barbershop.name}</Text>
         </View>
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Selecciona servicios</Text>
-        <Text style={styles.sectionSubtitle}>Puedes seleccionar múltiples servicios</Text>
+      <View style={[styles.section, { backgroundColor: theme.background }]}>
+        <Text style={[styles.sectionTitle, { color: theme.text }]}>Selecciona servicios</Text>
+        <Text style={[styles.sectionSubtitle, { color: theme.textSecondary }]}>Puedes seleccionar múltiples servicios</Text>
         {mockServices.map((service) => {
           const isSelected = selectedServices.some(s => s.id === service.id);
           return (
@@ -142,19 +143,25 @@ export default function BookAppointmentScreen({ route, navigation }: any) {
               key={service.id}
               style={[
                 styles.serviceCard,
-                isSelected && styles.selectedCard
+                isSelected ? { 
+                  backgroundColor: theme.success,
+                  borderColor: theme.success 
+                } : { 
+                  backgroundColor: theme.surface,
+                  borderColor: theme.border
+                }
               ]}
               onPress={() => toggleServiceSelection(service)}
             >
               <View style={styles.serviceInfo}>
-                <Text style={styles.serviceName}>{service.name}</Text>
-                <Text style={styles.serviceDescription}>{service.description}</Text>
-                <Text style={styles.serviceDuration}>⏱️ {service.duration} min</Text>
+                <Text style={[styles.serviceName, { color: isSelected ? '#fff' : theme.text }]}>{service.name}</Text>
+                <Text style={[styles.serviceDescription, { color: isSelected ? 'rgba(255,255,255,0.8)' : theme.textSecondary }]}>{service.description}</Text>
+                <Text style={[styles.serviceDuration, { color: isSelected ? 'rgba(255,255,255,0.8)' : theme.textSecondary }]}>⏱️ {service.duration} min</Text>
               </View>
               <View style={styles.servicePrice}>
-                <Text style={styles.priceAmount}>${service.price}</Text>
+                <Text style={[styles.priceAmount, { color: isSelected ? '#fff' : theme.success }]}>${service.price}</Text>
                 {isSelected && (
-                  <Ionicons name="checkmark-circle" size={24} color="#27ae60" />
+                  <Ionicons name="checkmark-circle" size={24} color="#fff" />
                 )}
               </View>
             </TouchableOpacity>
@@ -162,21 +169,21 @@ export default function BookAppointmentScreen({ route, navigation }: any) {
         })}
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Selecciona una fecha</Text>
+      <View style={[styles.section, { backgroundColor: theme.background }]}>
+        <Text style={[styles.sectionTitle, { color: theme.text }]}>Selecciona una fecha</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {availableDates.map((item) => (
             <TouchableOpacity
               key={item.date}
               style={[
                 styles.dateCard,
-                selectedDate === item.date && styles.selectedDateCard
+                selectedDate === item.date ? { backgroundColor: theme.primary } : { backgroundColor: theme.surface, borderColor: theme.border }
               ]}
               onPress={() => setSelectedDate(item.date)}
             >
               <Text style={[
                 styles.dateText,
-                selectedDate === item.date && styles.selectedDateText
+                selectedDate === item.date ? styles.selectedDateText : { color: theme.text }
               ]}>
                 {item.display}
               </Text>
@@ -185,21 +192,21 @@ export default function BookAppointmentScreen({ route, navigation }: any) {
         </ScrollView>
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Selecciona una hora</Text>
+      <View style={[styles.section, { backgroundColor: theme.background }]}>
+        <Text style={[styles.sectionTitle, { color: theme.text }]}>Selecciona una hora</Text>
         <View style={styles.timeGrid}>
           {availableTimes.map((time) => (
             <TouchableOpacity
               key={time}
               style={[
                 styles.timeCard,
-                selectedTime === time && styles.selectedTimeCard
+                selectedTime === time ? { backgroundColor: theme.primary } : { backgroundColor: theme.surface, borderColor: theme.border }
               ]}
               onPress={() => setSelectedTime(time)}
             >
               <Text style={[
                 styles.timeText,
-                selectedTime === time && styles.selectedTimeText
+                selectedTime === time ? styles.selectedTimeText : { color: theme.text }
               ]}>
                 {time}
               </Text>
@@ -209,32 +216,35 @@ export default function BookAppointmentScreen({ route, navigation }: any) {
       </View>
 
       {selectedServices.length > 0 && selectedDate && selectedTime && (
-        <View style={styles.summaryCard}>
-          <Text style={styles.summaryTitle}>Resumen de tu cita</Text>
-          <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>Servicios:</Text>
-            <Text style={styles.summaryValue}>{getServicesNames()}</Text>
+        <View style={[styles.summaryCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+          <Text style={[styles.summaryTitle, { color: theme.text }]}>Resumen de tu cita</Text>
+          <View style={[styles.summaryRow, { borderBottomColor: theme.divider }]}>
+            <Text style={[styles.summaryLabel, { color: theme.textSecondary }]}>Servicios:</Text>
+            <Text style={[styles.summaryValue, { color: theme.text }]}>{getServicesNames()}</Text>
+          </View>
+          <View style={[styles.summaryRow, { borderBottomColor: theme.divider }]}>
+            <Text style={[styles.summaryLabel, { color: theme.textSecondary }]}>Duración total:</Text>
+            <Text style={[styles.summaryValue, { color: theme.text }]}>{getTotalDuration()} min</Text>
+          </View>
+          <View style={[styles.summaryRow, { borderBottomColor: theme.divider }]}>
+            <Text style={[styles.summaryLabel, { color: theme.textSecondary }]}>Fecha:</Text>
+            <Text style={[styles.summaryValue, { color: theme.text }]}>{selectedDate}</Text>
+          </View>
+          <View style={[styles.summaryRow, { borderBottomColor: theme.divider }]}>
+            <Text style={[styles.summaryLabel, { color: theme.textSecondary }]}>Hora:</Text>
+            <Text style={[styles.summaryValue, { color: theme.text }]}>{selectedTime}</Text>
           </View>
           <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>Duración total:</Text>
-            <Text style={styles.summaryValue}>{getTotalDuration()} min</Text>
-          </View>
-          <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>Fecha:</Text>
-            <Text style={styles.summaryValue}>{selectedDate}</Text>
-          </View>
-          <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>Hora:</Text>
-            <Text style={styles.summaryValue}>{selectedTime}</Text>
-          </View>
-          <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>Precio total:</Text>
-            <Text style={styles.summaryTotal}>${getTotalPrice()}</Text>
+            <Text style={[styles.summaryLabel, { color: theme.textSecondary }]}>Precio total:</Text>
+            <Text style={[styles.summaryTotal, { color: theme.success }]}>${getTotalPrice()}</Text>
           </View>
         </View>
       )}
 
-      <TouchableOpacity style={styles.bookButton} onPress={handleBooking}>
+      <TouchableOpacity 
+        style={[styles.bookButton, { backgroundColor: theme.primary }]} 
+        onPress={handleBooking}
+      >
         <Text style={styles.bookButtonText}>Confirmar Cita</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -244,12 +254,10 @@ export default function BookAppointmentScreen({ route, navigation }: any) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
   },
   header: {
     flexDirection: 'row',
     padding: 20,
-    backgroundColor: '#f8f9fa',
     alignItems: 'center',
   },
   barberPhoto: {
@@ -263,11 +271,9 @@ const styles = StyleSheet.create({
   barberName: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#2c3e50',
   },
   barbershopName: {
     fontSize: 14,
-    color: '#7f8c8d',
     marginTop: 4,
   },
   section: {
@@ -276,27 +282,19 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#2c3e50',
     marginBottom: 5,
   },
   sectionSubtitle: {
     fontSize: 13,
-    color: '#7f8c8d',
     marginBottom: 15,
   },
   serviceCard: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: '#f8f9fa',
     padding: 15,
     borderRadius: 12,
     marginBottom: 12,
-    borderWidth: 2,
-    borderColor: 'transparent',
-  },
-  selectedCard: {
-    borderColor: '#27ae60',
-    backgroundColor: '#e8f8f5',
+    borderWidth: 1,
   },
   serviceInfo: {
     flex: 1,
@@ -304,17 +302,14 @@ const styles = StyleSheet.create({
   serviceName: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#2c3e50',
     marginBottom: 4,
   },
   serviceDescription: {
     fontSize: 13,
-    color: '#7f8c8d',
     marginBottom: 6,
   },
   serviceDuration: {
     fontSize: 12,
-    color: '#95a5a6',
   },
   servicePrice: {
     alignItems: 'flex-end',
@@ -323,23 +318,18 @@ const styles = StyleSheet.create({
   priceAmount: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#27ae60',
   },
   dateCard: {
-    backgroundColor: '#f8f9fa',
     padding: 15,
     borderRadius: 12,
     marginRight: 10,
     minWidth: 100,
     alignItems: 'center',
-  },
-  selectedDateCard: {
-    backgroundColor: '#3498db',
+    borderWidth: 1,
   },
   dateText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#2c3e50',
   },
   selectedDateText: {
     color: '#fff',
@@ -349,58 +339,51 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   timeCard: {
-    backgroundColor: '#f8f9fa',
     padding: 12,
     borderRadius: 8,
     marginRight: 10,
     marginBottom: 10,
     minWidth: 70,
     alignItems: 'center',
-  },
-  selectedTimeCard: {
-    backgroundColor: '#3498db',
+    borderWidth: 1,
   },
   timeText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#2c3e50',
   },
   selectedTimeText: {
     color: '#fff',
   },
   summaryCard: {
-    backgroundColor: '#f8f9fa',
     margin: 20,
     padding: 20,
     borderRadius: 12,
+    borderWidth: 1,
   },
   summaryTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#2c3e50',
     marginBottom: 15,
   },
   summaryRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 10,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
   },
   summaryLabel: {
     fontSize: 14,
-    color: '#7f8c8d',
   },
   summaryValue: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#2c3e50',
   },
   summaryTotal: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#27ae60',
   },
   bookButton: {
-    backgroundColor: '#2c3e50',
     margin: 20,
     padding: 18,
     borderRadius: 12,

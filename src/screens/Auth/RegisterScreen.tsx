@@ -10,7 +10,7 @@ import {
   ScrollView,
   Alert
 } from 'react-native';
-import { useAuth } from '../../context/AppContext';
+import { useAuth, useTheme } from '../../context/AppContext';
 
 export default function RegisterScreen({ navigation }: any) {
   const [name, setName] = useState('');
@@ -19,6 +19,7 @@ export default function RegisterScreen({ navigation }: any) {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const { register } = useAuth();
+  const { theme } = useTheme();
 
   const handleRegister = () => {
     if (!name || !email || !phone || !password || !confirmPassword) {
@@ -45,61 +46,66 @@ export default function RegisterScreen({ navigation }: any) {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}
+      style={[styles.container, { backgroundColor: theme.background }]}
     >
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.header}>
-          <Text style={styles.title}>Crear Cuenta</Text>
-          <Text style={styles.subtitle}>Regístrate como cliente</Text>
+          <Text style={[styles.title, { color: theme.text }]}>Crear Cuenta</Text>
+          <Text style={[styles.subtitle, { color: theme.textSecondary }]}>Regístrate como cliente</Text>
         </View>
 
         <View style={styles.formContainer}>
-          <Text style={styles.label}>Nombre completo</Text>
+          <Text style={[styles.label, { color: theme.text }]}>Nombre completo</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { backgroundColor: theme.surface, color: theme.text, borderColor: theme.border }]}
             placeholder="Juan Pérez"
+            placeholderTextColor={theme.textSecondary}
             value={name}
             onChangeText={setName}
           />
 
-          <Text style={styles.label}>Correo electrónico</Text>
+          <Text style={[styles.label, { color: theme.text }]}>Correo electrónico</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { backgroundColor: theme.surface, color: theme.text, borderColor: theme.border }]}
             placeholder="tu@email.com"
+            placeholderTextColor={theme.textSecondary}
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
             autoCapitalize="none"
           />
 
-          <Text style={styles.label}>Teléfono</Text>
+          <Text style={[styles.label, { color: theme.text }]}>Teléfono</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { backgroundColor: theme.surface, color: theme.text, borderColor: theme.border }]}
             placeholder="555-1234"
+            placeholderTextColor={theme.textSecondary}
             value={phone}
             onChangeText={setPhone}
             keyboardType="phone-pad"
           />
 
-          <Text style={styles.label}>Contraseña</Text>
+          <Text style={[styles.label, { color: theme.text }]}>Contraseña</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { backgroundColor: theme.surface, color: theme.text, borderColor: theme.border }]}
             placeholder="••••••••"
+            placeholderTextColor={theme.textSecondary}
             value={password}
             onChangeText={setPassword}
             secureTextEntry
           />
 
-          <Text style={styles.label}>Confirmar contraseña</Text>
+          <Text style={[styles.label, { color: theme.text }]}>Confirmar contraseña</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { backgroundColor: theme.surface, color: theme.text, borderColor: theme.border }]}
             placeholder="••••••••"
+            placeholderTextColor={theme.textSecondary}
             value={confirmPassword}
             onChangeText={setConfirmPassword}
             secureTextEntry
           />
 
-          <TouchableOpacity style={styles.registerButton} onPress={handleRegister}>
+          <TouchableOpacity style={[styles.registerButton, { backgroundColor: theme.primary }]} onPress={handleRegister}>
             <Text style={styles.registerButtonText}>Crear Cuenta</Text>
           </TouchableOpacity>
 
@@ -107,7 +113,7 @@ export default function RegisterScreen({ navigation }: any) {
             style={styles.loginButton}
             onPress={() => navigation.goBack()}
           >
-            <Text style={styles.loginButtonText}>
+            <Text style={[styles.loginButtonText, { color: theme.primary }]}>
               ¿Ya tienes cuenta? Inicia sesión
             </Text>
           </TouchableOpacity>

@@ -9,70 +9,72 @@ import {
   FlatList,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '../../context/AppContext';
 import { mockBarbers } from '../../data/mockData';
 
 export default function BarbershopDetailScreen({ route, navigation }: any) {
   const { barbershop } = route.params;
+  const { theme } = useTheme();
   const barbers = mockBarbers.filter(b => b.barbershopId === barbershop.id);
 
   const renderBarberCard = ({ item }: any) => (
     <TouchableOpacity
-      style={styles.barberCard}
+      style={[styles.barberCard, { backgroundColor: theme.surface, borderColor: theme.divider }]}
       onPress={() => navigation.navigate('BarberProfile', { barber: item, barbershop })}
     >
       <Image source={{ uri: item.photo }} style={styles.barberPhoto} />
       <View style={styles.barberInfo}>
-        <Text style={styles.barberName}>{item.name}</Text>
-        <Text style={styles.barberSpecialty}>{item.specialty}</Text>
+        <Text style={[styles.barberName, { color: theme.text }]}>{item.name}</Text>
+        <Text style={[styles.barberSpecialty, { color: theme.textSecondary }]}>{item.specialty}</Text>
         <View style={styles.barberRating}>
           <Ionicons name="star" size={14} color="#f39c12" />
-          <Text style={styles.ratingText}>{item.rating}</Text>
-          <Text style={styles.experienceText}> • {item.experience}</Text>
+          <Text style={[styles.ratingText, { color: theme.text }]}>{item.rating}</Text>
+          <Text style={[styles.experienceText, { color: theme.textSecondary }]}> • {item.experience}</Text>
         </View>
       </View>
-      <Ionicons name="chevron-forward" size={24} color="#bdc3c7" />
+      <Ionicons name="chevron-forward" size={24} color={theme.disabled} />
     </TouchableOpacity>
   );
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
       <Image source={{ uri: barbershop.image }} style={styles.headerImage} />
       
-      <View style={styles.content}>
-        <Text style={styles.title}>{barbershop.name}</Text>
+      <View style={[styles.content, { backgroundColor: theme.background }]}>
+        <Text style={[styles.title, { color: theme.text }]}>{barbershop.name}</Text>
         
         <View style={styles.ratingContainer}>
           <Ionicons name="star" size={20} color="#f39c12" />
-          <Text style={styles.rating}>{barbershop.rating}</Text>
-          <Text style={styles.reviews}>(234 reseñas)</Text>
+          <Text style={[styles.rating, { color: theme.text }]}>{barbershop.rating}</Text>
+          <Text style={[styles.reviews, { color: theme.textSecondary }]}>(234 reseñas)</Text>
         </View>
 
-        <View style={styles.infoSection}>
+        <View style={[styles.infoSection, { backgroundColor: theme.surface, borderColor: theme.border }]}>
           <View style={styles.infoRow}>
-            <Ionicons name="location" size={20} color="#3498db" />
-            <Text style={styles.infoText}>{barbershop.address}</Text>
+            <Ionicons name="location" size={20} color={theme.primary} />
+            <Text style={[styles.infoText, { color: theme.text }]}>{barbershop.address}</Text>
           </View>
           
           <View style={styles.infoRow}>
-            <Ionicons name="call" size={20} color="#3498db" />
-            <Text style={styles.infoText}>{barbershop.phone}</Text>
+            <Ionicons name="call" size={20} color={theme.primary} />
+            <Text style={[styles.infoText, { color: theme.text }]}>{barbershop.phone}</Text>
           </View>
           
           <View style={styles.infoRow}>
-            <Ionicons name="time" size={20} color="#3498db" />
-            <Text style={styles.infoText}>
+            <Ionicons name="time" size={20} color={theme.primary} />
+            <Text style={[styles.infoText, { color: theme.text }]}>
               {barbershop.openTime} - {barbershop.closeTime}
             </Text>
           </View>
         </View>
 
         <View style={styles.descriptionSection}>
-          <Text style={styles.sectionTitle}>Acerca de</Text>
-          <Text style={styles.description}>{barbershop.description}</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>Acerca de</Text>
+          <Text style={[styles.description, { color: theme.textSecondary }]}>{barbershop.description}</Text>
         </View>
 
         <View style={styles.barbersSection}>
-          <Text style={styles.sectionTitle}>Nuestros Barberos</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>Nuestros Barberos</Text>
           <FlatList
             data={barbers}
             renderItem={renderBarberCard}
@@ -88,7 +90,6 @@ export default function BarbershopDetailScreen({ route, navigation }: any) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
   },
   headerImage: {
     width: '100%',
@@ -100,7 +101,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     fontWeight: 'bold',
-    color: '#2c3e50',
     marginBottom: 10,
   },
   ratingContainer: {
@@ -112,18 +112,16 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     fontSize: 16,
     fontWeight: '600',
-    color: '#2c3e50',
   },
   reviews: {
     marginLeft: 5,
     fontSize: 14,
-    color: '#7f8c8d',
   },
   infoSection: {
-    backgroundColor: '#f8f9fa',
     borderRadius: 12,
     padding: 15,
     marginBottom: 20,
+    borderWidth: 0,
   },
   infoRow: {
     flexDirection: 'row',
@@ -133,7 +131,6 @@ const styles = StyleSheet.create({
   infoText: {
     marginLeft: 12,
     fontSize: 14,
-    color: '#2c3e50',
     flex: 1,
   },
   descriptionSection: {
@@ -142,12 +139,10 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#2c3e50',
     marginBottom: 12,
   },
   description: {
     fontSize: 14,
-    color: '#7f8c8d',
     lineHeight: 22,
   },
   barbersSection: {
@@ -156,7 +151,6 @@ const styles = StyleSheet.create({
   barberCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f8f9fa',
     borderRadius: 12,
     padding: 15,
     marginBottom: 12,
@@ -173,12 +167,10 @@ const styles = StyleSheet.create({
   barberName: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#2c3e50',
     marginBottom: 4,
   },
   barberSpecialty: {
     fontSize: 13,
-    color: '#7f8c8d',
     marginBottom: 4,
   },
   barberRating: {
@@ -189,10 +181,8 @@ const styles = StyleSheet.create({
     marginLeft: 4,
     fontSize: 13,
     fontWeight: '600',
-    color: '#2c3e50',
   },
   experienceText: {
     fontSize: 12,
-    color: '#95a5a6',
   },
 });

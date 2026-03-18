@@ -7,11 +7,12 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useAuth, useAppointments } from '../../context/AppContext';
+import { useAuth, useAppointments, useTheme } from '../../context/AppContext';
 
 export default function BarberDashboardScreen({ navigation }: any) {
   const { user } = useAuth();
   const { getBarberAppointments } = useAppointments();
+  const { theme } = useTheme();
 
   if (!user) return null;
 
@@ -31,37 +32,37 @@ export default function BarberDashboardScreen({ navigation }: any) {
     .reduce((sum, apt) => sum + apt.price, 0);
 
   const StatCard = ({ icon, title, value, color, onPress }: any) => (
-    <TouchableOpacity style={styles.statCard} onPress={onPress}>
+    <TouchableOpacity style={[styles.statCard, { backgroundColor: theme.surface, shadowColor: theme.text }]} onPress={onPress}>
       <View style={[styles.statIcon, { backgroundColor: color + '20' }]}>
         <Ionicons name={icon} size={28} color={color} />
       </View>
-      <Text style={styles.statValue}>{value}</Text>
-      <Text style={styles.statTitle}>{title}</Text>
+      <Text style={[styles.statValue, { color: theme.text }]}>{value}</Text>
+      <Text style={[styles.statTitle, { color: theme.textSecondary }]}>{title}</Text>
     </TouchableOpacity>
   );
 
   const renderTodayAppointment = (apt: any) => (
-    <View key={apt.id} style={styles.appointmentItem}>
-      <View style={styles.appointmentTime}>
-        <Text style={styles.timeText}>{apt.time}</Text>
+    <View key={apt.id} style={[styles.appointmentItem, { backgroundColor: theme.cardBg, borderBottomColor: theme.divider }]}>
+      <View style={[styles.appointmentTime, { backgroundColor: theme.primary }]}>
+        <Text style={[styles.timeText, { color: theme.headerText }]}>{apt.time}</Text>
       </View>
       <View style={styles.appointmentDetails}>
-        <Text style={styles.clientName}>{apt.clientName}</Text>
-        <Text style={styles.serviceName}>{apt.serviceName}</Text>
-        <Text style={styles.appointmentPrice}>${apt.price}</Text>
+        <Text style={[styles.clientName, { color: theme.text }]}>{apt.clientName}</Text>
+        <Text style={[styles.serviceName, { color: theme.textSecondary }]}>{apt.serviceName}</Text>
+        <Text style={[styles.appointmentPrice, { color: theme.text }]}>${apt.price}</Text>
       </View>
       <View style={[styles.statusDot, { 
-        backgroundColor: apt.status === 'confirmed' ? '#27ae60' : '#f39c12' 
+        backgroundColor: apt.status === 'confirmed' ? theme.success : theme.warning 
       }]} />
     </View>
   );
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
+    <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
+      <View style={[styles.header, { backgroundColor: theme.headerBg }]}>
         <View>
-          <Text style={styles.greeting}>Hola, {user?.name}! 👋</Text>
-          <Text style={styles.subtitle}>Panel de Control</Text>
+          <Text style={[styles.greeting, { color: theme.headerText }]}>Hola, {user?.name}! 👋</Text>
+          <Text style={[styles.subtitle, { color: theme.headerText }]}>Panel de Control</Text>
         </View>
       </View>
 
@@ -71,21 +72,21 @@ export default function BarberDashboardScreen({ navigation }: any) {
             icon="calendar"
             title="Citas Hoy"
             value={todayAppointments.length}
-            color="#3498db"
+            color={theme.primary}
             onPress={() => navigation.navigate('BarberAppointments')}
           />
           <StatCard
             icon="checkmark-circle"
             title="Confirmadas"
             value={confirmedCount}
-            color="#27ae60"
+            color={theme.success}
             onPress={() => navigation.navigate('BarberAppointments')}
           />
           <StatCard
             icon="time"
             title="Pendientes"
             value={pendingCount}
-            color="#f39c12"
+            color={theme.warning}
             onPress={() => navigation.navigate('BarberAppointments')}
           />
           <StatCard
@@ -97,27 +98,27 @@ export default function BarberDashboardScreen({ navigation }: any) {
           />
         </View>
 
-        <View style={styles.revenueCard}>
+        <View style={[styles.revenueCard, { backgroundColor: theme.surface }]}>
           <View style={styles.revenueHeader}>
-            <Ionicons name="cash" size={24} color="#27ae60" />
-            <Text style={styles.revenueTitle}>Ingresos Totales</Text>
+            <Ionicons name="cash" size={24} color={theme.success} />
+            <Text style={[styles.revenueTitle, { color: theme.text }]}>Ingresos Totales</Text>
           </View>
-          <Text style={styles.revenueAmount}>${totalRevenue.toLocaleString()}</Text>
-          <Text style={styles.revenueSubtext}>De servicios completados</Text>
+          <Text style={[styles.revenueAmount, { color: theme.text }]}>${totalRevenue.toLocaleString()}</Text>
+          <Text style={[styles.revenueSubtext, { color: theme.textSecondary }]}>De servicios completados</Text>
         </View>
 
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Citas de Hoy</Text>
+            <Text style={[styles.sectionTitle, { color: theme.text }]}>Citas de Hoy</Text>
             <TouchableOpacity onPress={() => navigation.navigate('BarberAppointments')}>
-              <Text style={styles.seeAllText}>Ver todas</Text>
+              <Text style={[styles.seeAllText, { color: theme.primary }]}>Ver todas</Text>
             </TouchableOpacity>
           </View>
 
           {todayAppointments.length === 0 ? (
-            <View style={styles.emptyState}>
-              <Ionicons name="calendar-outline" size={50} color="#bdc3c7" />
-              <Text style={styles.emptyText}>No tienes citas para hoy</Text>
+            <View style={[styles.emptyState, { backgroundColor: theme.surface }]}>
+              <Ionicons name="calendar-outline" size={50} color={theme.primary} />
+              <Text style={[styles.emptyText, { color: theme.text }]}>No tienes citas para hoy</Text>
             </View>
           ) : (
             <View style={styles.todayList}>
@@ -127,30 +128,30 @@ export default function BarberDashboardScreen({ navigation }: any) {
         </View>
 
         <View style={styles.quickActions}>
-          <Text style={styles.sectionTitle}>Acceso Rápido</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>Acceso Rápido</Text>
           
           <TouchableOpacity 
-            style={styles.actionCard}
+            style={[styles.actionCard, { backgroundColor: theme.surface, borderBottomColor: theme.divider }]}
             onPress={() => navigation.navigate('BarberAppointments')}
           >
-            <Ionicons name="list" size={24} color="#3498db" />
-            <Text style={styles.actionCardText}>Ver todas las citas</Text>
-            <Ionicons name="chevron-forward" size={20} color="#bdc3c7" />
+            <Ionicons name="list" size={24} color={theme.primary} />
+            <Text style={[styles.actionCardText, { color: theme.text }]}>Ver todas las citas</Text>
+            <Ionicons name="chevron-forward" size={20} color={theme.textSecondary} />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.actionCard}>
+          <TouchableOpacity style={[styles.actionCard, { backgroundColor: theme.surface, borderBottomColor: theme.divider }]}>
             <Ionicons name="calendar" size={24} color="#9b59b6" />
-            <Text style={styles.actionCardText}>Mi horario</Text>
-            <Ionicons name="chevron-forward" size={20} color="#bdc3c7" />
+            <Text style={[styles.actionCardText, { color: theme.text }]}>Mi horario</Text>
+            <Ionicons name="chevron-forward" size={20} color={theme.textSecondary} />
           </TouchableOpacity>
 
           <TouchableOpacity 
-            style={styles.actionCard}
+            style={[styles.actionCard, { backgroundColor: theme.surface }]}
             onPress={() => navigation.navigate('BarberStatistics')}
           >
-            <Ionicons name="stats-chart" size={24} color="#27ae60" />
-            <Text style={styles.actionCardText}>Estadísticas</Text>
-            <Ionicons name="chevron-forward" size={20} color="#bdc3c7" />
+            <Ionicons name="stats-chart" size={24} color={theme.success} />
+            <Text style={[styles.actionCardText, { color: theme.text }]}>Estadísticas</Text>
+            <Ionicons name="chevron-forward" size={20} color={theme.textSecondary} />
           </TouchableOpacity>
         </View>
       </View>
@@ -250,7 +251,7 @@ const styles = StyleSheet.create({
   },
   revenueSubtext: {
     fontSize: 13,
-    color: '#7f8c8d',
+    color: '#2c3e50',
   },
   section: {
     marginBottom: 25,
@@ -308,7 +309,7 @@ const styles = StyleSheet.create({
   },
   serviceName: {
     fontSize: 13,
-    color: '#7f8c8d',
+    color: '#2c3e50',
     marginBottom: 3,
   },
   appointmentPrice: {
@@ -322,7 +323,6 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   emptyState: {
-    backgroundColor: '#fff',
     padding: 40,
     borderRadius: 15,
     alignItems: 'center',
@@ -330,7 +330,6 @@ const styles = StyleSheet.create({
   emptyText: {
     marginTop: 15,
     fontSize: 14,
-    color: '#7f8c8d',
   },
   quickActions: {
     marginBottom: 20,

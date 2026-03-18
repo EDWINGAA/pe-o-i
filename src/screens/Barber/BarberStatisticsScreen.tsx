@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { PieChart } from 'react-native-chart-kit';
-import { useAuth, useAppointments } from '../../context/AppContext';
+import { useAuth, useAppointments, useTheme } from '../../context/AppContext';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -19,6 +19,7 @@ type ComparisonType = 'current' | 'previous' | 'comparison';
 export default function BarberStatisticsScreen({ navigation }: any) {
   const { user } = useAuth();
   const { getBarberAppointments } = useAppointments();
+  const { theme } = useTheme();
   
   const [periodType, setPeriodType] = useState<PeriodType>('week');
   const [comparisonView, setComparisonView] = useState<ComparisonType>('current');
@@ -116,15 +117,15 @@ export default function BarberStatisticsScreen({ navigation }: any) {
     {
       name: 'Actuales',
       population: currentStats.totalRevenue,
-      color: '#27ae60',
-      legendFontColor: '#2c3e50',
+      color: theme.success,
+      legendFontColor: theme.text,
       legendFontSize: 12,
     },
     {
       name: 'Anteriores',
       population: previousStats.totalRevenue,
-      color: '#95a5a6',
-      legendFontColor: '#2c3e50',
+      color: theme.disabled,
+      legendFontColor: theme.text,
       legendFontSize: 12,
     },
   ];
@@ -134,15 +135,15 @@ export default function BarberStatisticsScreen({ navigation }: any) {
     {
       name: 'Actuales',
       population: currentStats.uniqueClients,
-      color: '#3498db',
-      legendFontColor: '#2c3e50',
+      color: theme.primary,
+      legendFontColor: theme.text,
       legendFontSize: 12,
     },
     {
       name: 'Anteriores',
       population: previousStats.uniqueClients,
-      color: '#95a5a6',
-      legendFontColor: '#2c3e50',
+      color: theme.disabled,
+      legendFontColor: theme.text,
       legendFontSize: 12,
     },
   ];
@@ -153,14 +154,14 @@ export default function BarberStatisticsScreen({ navigation }: any) {
       name: 'Actuales',
       population: currentStats.totalAppointments,
       color: '#9b59b6',
-      legendFontColor: '#2c3e50',
+      legendFontColor: theme.text,
       legendFontSize: 12,
     },
     {
       name: 'Anteriores',
       population: previousStats.totalAppointments,
-      color: '#95a5a6',
-      legendFontColor: '#2c3e50',
+      color: theme.disabled,
+      legendFontColor: theme.text,
       legendFontSize: 12,
     },
   ];
@@ -173,15 +174,15 @@ export default function BarberStatisticsScreen({ navigation }: any) {
   const servicesPieData = topServices.map(([name, count], index) => ({
     name,
     population: count,
-    color: ['#e74c3c', '#f39c12', '#1abc9c', '#34495e'][index],
-    legendFontColor: '#2c3e50',
+    color: [theme.danger, theme.warning, '#1abc9c', '#34495e'][index],
+    legendFontColor: theme.text,
     legendFontSize: 11,
   }));
 
   const chartConfig = {
-    backgroundColor: '#ffffff',
-    backgroundGradientFrom: '#ffffff',
-    backgroundGradientTo: '#ffffff',
+    backgroundColor: theme.surface,
+    backgroundGradientFrom: theme.surface,
+    backgroundGradientTo: theme.surface,
     color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
   };
 
@@ -194,26 +195,26 @@ export default function BarberStatisticsScreen({ navigation }: any) {
     color,
     format = (val: number) => val.toString()
   }: any) => (
-    <View style={styles.metricCard}>
+    <View style={[styles.metricCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
       <View style={styles.metricHeader}>
         <Ionicons name={icon} size={24} color={color} />
-        <Text style={styles.metricTitle}>{title}</Text>
+        <Text style={[styles.metricTitle, { color: theme.textSecondary }]}>{title}</Text>
       </View>
       <Text style={[styles.metricValue, { color }]}>{format(current)}</Text>
       {comparisonView !== 'current' && (
-        <View style={styles.metricComparison}>
-          <Text style={styles.metricPrevious}>
+        <View style={[styles.metricComparison, { borderTopColor: theme.divider }]}>
+          <Text style={[styles.metricPrevious, { color: theme.textSecondary }]}>
             Anterior: {format(previous)}
           </Text>
           <View style={styles.changeContainer}>
             <Ionicons 
               name={percentageChange >= 0 ? 'trending-up' : 'trending-down'} 
               size={16} 
-              color={percentageChange >= 0 ? '#27ae60' : '#e74c3c'} 
+              color={percentageChange >= 0 ? theme.success : theme.danger} 
             />
             <Text style={[
               styles.changeText,
-              { color: percentageChange >= 0 ? '#27ae60' : '#e74c3c' }
+              { color: percentageChange >= 0 ? theme.success : theme.danger }
             ]}>
               {Math.abs(percentageChange).toFixed(1)}%
             </Text>
@@ -224,31 +225,31 @@ export default function BarberStatisticsScreen({ navigation }: any) {
   );
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <View style={[styles.header, { backgroundColor: theme.headerBg }]}>
         <TouchableOpacity 
           style={styles.backButton}
           onPress={() => navigation.goBack()}
         >
-          <Ionicons name="arrow-back" size={24} color="#fff" />
+          <Ionicons name="arrow-back" size={24} color={theme.headerText} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Estadísticas</Text>
+        <Text style={[styles.headerTitle, { color: theme.headerText }]}>Estadísticas</Text>
         <View style={{ width: 24 }} />
       </View>
 
-      <ScrollView style={styles.content}>
+      <ScrollView style={[styles.content, { backgroundColor: theme.background }]}>
         {/* Selector de periodo */}
-        <View style={styles.periodSelector}>
+        <View style={[styles.periodSelector, { backgroundColor: theme.surface, borderColor: theme.border }]}>
           <TouchableOpacity
             style={[
               styles.periodButton,
-              periodType === 'week' && styles.periodButtonActive
+              periodType === 'week' ? { backgroundColor: theme.primary } : { backgroundColor: theme.disabled }
             ]}
             onPress={() => setPeriodType('week')}
           >
             <Text style={[
               styles.periodButtonText,
-              periodType === 'week' && styles.periodButtonTextActive
+              { color: periodType === 'week' ? '#fff' : theme.text }
             ]}>
               Semanal
             </Text>
@@ -256,13 +257,13 @@ export default function BarberStatisticsScreen({ navigation }: any) {
           <TouchableOpacity
             style={[
               styles.periodButton,
-              periodType === 'month' && styles.periodButtonActive
+              periodType === 'month' ? { backgroundColor: theme.primary } : { backgroundColor: theme.disabled }
             ]}
             onPress={() => setPeriodType('month')}
           >
             <Text style={[
               styles.periodButtonText,
-              periodType === 'month' && styles.periodButtonTextActive
+              { color: periodType === 'month' ? '#fff' : theme.text }
             ]}>
               Mensual
             </Text>
@@ -270,17 +271,17 @@ export default function BarberStatisticsScreen({ navigation }: any) {
         </View>
 
         {/* Selector de vista de comparación */}
-        <View style={styles.comparisonSelector}>
+        <View style={[styles.comparisonSelector, { backgroundColor: theme.surface, borderColor: theme.border }]}>
           <TouchableOpacity
             style={[
               styles.comparisonButton,
-              comparisonView === 'current' && styles.comparisonButtonActive
+              comparisonView === 'current' ? { backgroundColor: theme.primary } : { backgroundColor: theme.disabled }
             ]}
             onPress={() => setComparisonView('current')}
           >
             <Text style={[
               styles.comparisonButtonText,
-              comparisonView === 'current' && styles.comparisonButtonTextActive
+              { color: comparisonView === 'current' ? '#fff' : theme.text }
             ]}>
               Actual
             </Text>
@@ -288,13 +289,13 @@ export default function BarberStatisticsScreen({ navigation }: any) {
           <TouchableOpacity
             style={[
               styles.comparisonButton,
-              comparisonView === 'comparison' && styles.comparisonButtonActive
+              comparisonView === 'comparison' ? { backgroundColor: theme.primary } : { backgroundColor: theme.disabled }
             ]}
             onPress={() => setComparisonView('comparison')}
           >
             <Text style={[
               styles.comparisonButtonText,
-              comparisonView === 'comparison' && styles.comparisonButtonTextActive
+              { color: comparisonView === 'comparison' ? '#fff' : theme.text }
             ]}>
               Comparación
             </Text>
@@ -344,9 +345,9 @@ export default function BarberStatisticsScreen({ navigation }: any) {
 
         {/* Gráfica de Ingresos */}
         {comparisonView === 'comparison' && (
-          <View style={styles.chartCard}>
-            <Text style={styles.chartTitle}>Comparación de Ingresos</Text>
-            <Text style={styles.chartSubtitle}>
+          <View style={[styles.chartCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+            <Text style={[styles.chartTitle, { color: theme.text }]}>Comparación de Ingresos</Text>
+            <Text style={[styles.chartSubtitle, { color: theme.textSecondary }]}>
               {periodType === 'week' ? 'Semana' : 'Mes'} actual vs anterior
             </Text>
             {(currentStats.totalRevenue > 0 || previousStats.totalRevenue > 0) ? (
@@ -361,8 +362,8 @@ export default function BarberStatisticsScreen({ navigation }: any) {
               />
             ) : (
               <View style={styles.emptyChart}>
-                <Ionicons name="bar-chart-outline" size={50} color="#bdc3c7" />
-                <Text style={styles.emptyChartText}>Sin datos disponibles</Text>
+                <Ionicons name="bar-chart-outline" size={50} color={theme.disabled} />
+                <Text style={[styles.emptyChartText, { color: theme.textSecondary }]}>Sin datos disponibles</Text>
               </View>
             )}
           </View>
@@ -370,9 +371,9 @@ export default function BarberStatisticsScreen({ navigation }: any) {
 
         {/* Gráfica de Clientes */}
         {comparisonView === 'comparison' && (
-          <View style={styles.chartCard}>
-            <Text style={styles.chartTitle}>Comparación de Clientes</Text>
-            <Text style={styles.chartSubtitle}>
+          <View style={[styles.chartCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+            <Text style={[styles.chartTitle, { color: theme.text }]}>Comparación de Clientes</Text>
+            <Text style={[styles.chartSubtitle, { color: theme.textSecondary }]}>
               Clientes únicos atendidos
             </Text>
             {(currentStats.uniqueClients > 0 || previousStats.uniqueClients > 0) ? (
@@ -387,8 +388,8 @@ export default function BarberStatisticsScreen({ navigation }: any) {
               />
             ) : (
               <View style={styles.emptyChart}>
-                <Ionicons name="people-outline" size={50} color="#bdc3c7" />
-                <Text style={styles.emptyChartText}>Sin datos disponibles</Text>
+                <Ionicons name="people-outline" size={50} color={theme.disabled} />
+                <Text style={[styles.emptyChartText, { color: theme.textSecondary }]}>Sin datos disponibles</Text>
               </View>
             )}
           </View>
@@ -396,9 +397,9 @@ export default function BarberStatisticsScreen({ navigation }: any) {
 
         {/* Gráfica de Citas */}
         {comparisonView === 'comparison' && (
-          <View style={styles.chartCard}>
-            <Text style={styles.chartTitle}>Comparación de Citas</Text>
-            <Text style={styles.chartSubtitle}>
+          <View style={[styles.chartCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+            <Text style={[styles.chartTitle, { color: theme.text }]}>Comparación de Citas</Text>
+            <Text style={[styles.chartSubtitle, { color: theme.textSecondary }]}>
               Citas completadas en el periodo
             </Text>
             {(currentStats.totalAppointments > 0 || previousStats.totalAppointments > 0) ? (
@@ -413,17 +414,17 @@ export default function BarberStatisticsScreen({ navigation }: any) {
               />
             ) : (
               <View style={styles.emptyChart}>
-                <Ionicons name="calendar-outline" size={50} color="#bdc3c7" />
-                <Text style={styles.emptyChartText}>Sin datos disponibles</Text>
+                <Ionicons name="calendar-outline" size={50} color={theme.disabled} />
+                <Text style={[styles.emptyChartText, { color: theme.textSecondary }]}>Sin datos disponibles</Text>
               </View>
             )}
           </View>
         )}
 
         {/* Gráfica de Servicios Más Populares */}
-        <View style={styles.chartCard}>
-          <Text style={styles.chartTitle}>Servicios Más Populares</Text>
-          <Text style={styles.chartSubtitle}>
+        <View style={[styles.chartCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+          <Text style={[styles.chartTitle, { color: theme.text }]}>Servicios Más Populares</Text>
+          <Text style={[styles.chartSubtitle, { color: theme.textSecondary }]}>
             {periodType === 'week' ? 'Esta semana' : 'Este mes'}
           </Text>
           {servicesPieData.length > 0 ? (
@@ -439,40 +440,40 @@ export default function BarberStatisticsScreen({ navigation }: any) {
             />
           ) : (
             <View style={styles.emptyChart}>
-              <Ionicons name="cut-outline" size={50} color="#bdc3c7" />
-              <Text style={styles.emptyChartText}>Sin servicios completados</Text>
+              <Ionicons name="cut-outline" size={50} color={theme.disabled} />
+              <Text style={[styles.emptyChartText, { color: theme.textSecondary }]}>Sin servicios completados</Text>
             </View>
           )}
         </View>
 
         {/* Resumen de rendimiento */}
-        <View style={styles.summaryCard}>
-          <Text style={styles.summaryTitle}>Resumen de Rendimiento</Text>
-          <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>Periodo:</Text>
-            <Text style={styles.summaryValue}>
+        <View style={[styles.summaryCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+          <Text style={[styles.summaryTitle, { color: theme.text }]}>Resumen de Rendimiento</Text>
+          <View style={[styles.summaryRow, { borderBottomColor: theme.divider }]}>
+            <Text style={[styles.summaryLabel, { color: theme.textSecondary }]}>Periodo:</Text>
+            <Text style={[styles.summaryValue, { color: theme.text }]}>
               {periodType === 'week' ? 'Semana actual' : 'Mes actual'}
             </Text>
           </View>
-          <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>Tasa de conversión:</Text>
-            <Text style={styles.summaryValue}>
+          <View style={[styles.summaryRow, { borderBottomColor: theme.divider }]}>
+            <Text style={[styles.summaryLabel, { color: theme.textSecondary }]}>Tasa de conversión:</Text>
+            <Text style={[styles.summaryValue, { color: theme.text }]}>
               {currentStats.totalAppointments > 0
                 ? ((currentStats.totalAppointments / (currentStats.totalAppointments + 5)) * 100).toFixed(1)
                 : 0}%
             </Text>
           </View>
-          <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>Ingreso por cliente:</Text>
-            <Text style={styles.summaryValue}>
+          <View style={[styles.summaryRow, { borderBottomColor: theme.divider }]}>
+            <Text style={[styles.summaryLabel, { color: theme.textSecondary }]}>Ingreso por cliente:</Text>
+            <Text style={[styles.summaryValue, { color: theme.text }]}>
               ${currentStats.uniqueClients > 0
                 ? (currentStats.totalRevenue / currentStats.uniqueClients).toFixed(0)
                 : 0}
             </Text>
           </View>
           <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>Citas por día promedio:</Text>
-            <Text style={styles.summaryValue}>
+            <Text style={[styles.summaryLabel, { color: theme.textSecondary }]}>Citas por día promedio:</Text>
+            <Text style={[styles.summaryValue, { color: theme.text }]}>
               {periodType === 'week'
                 ? (currentStats.totalAppointments / 7).toFixed(1)
                 : (currentStats.totalAppointments / 30).toFixed(1)}
@@ -487,10 +488,8 @@ export default function BarberStatisticsScreen({ navigation }: any) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
   },
   header: {
-    backgroundColor: '#2c3e50',
     paddingTop: 60,
     paddingBottom: 20,
     paddingHorizontal: 20,
@@ -504,7 +503,6 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#fff',
   },
   content: {
     flex: 1,
@@ -512,10 +510,10 @@ const styles = StyleSheet.create({
   },
   periodSelector: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
     borderRadius: 12,
     padding: 5,
     marginBottom: 15,
+    borderWidth: 1,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -529,22 +527,20 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   periodButtonActive: {
-    backgroundColor: '#2c3e50',
   },
   periodButtonText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#7f8c8d',
   },
   periodButtonTextActive: {
     color: '#fff',
   },
   comparisonSelector: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
     borderRadius: 12,
     padding: 5,
     marginBottom: 20,
+    borderWidth: 1,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -558,12 +554,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   comparisonButtonActive: {
-    backgroundColor: '#3498db',
   },
   comparisonButtonText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#7f8c8d',
   },
   comparisonButtonTextActive: {
     color: '#fff',
@@ -575,11 +569,11 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   metricCard: {
-    backgroundColor: '#fff',
     width: '48%',
     padding: 15,
     borderRadius: 12,
     marginBottom: 15,
+    borderWidth: 1,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -593,7 +587,6 @@ const styles = StyleSheet.create({
   },
   metricTitle: {
     fontSize: 12,
-    color: '#7f8c8d',
     marginLeft: 8,
     flex: 1,
   },
@@ -606,11 +599,9 @@ const styles = StyleSheet.create({
     marginTop: 8,
     paddingTop: 8,
     borderTopWidth: 1,
-    borderTopColor: '#ecf0f1',
   },
   metricPrevious: {
     fontSize: 11,
-    color: '#95a5a6',
     marginBottom: 5,
   },
   changeContainer: {
@@ -623,10 +614,10 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
   chartCard: {
-    backgroundColor: '#fff',
     borderRadius: 12,
     padding: 20,
     marginBottom: 20,
+    borderWidth: 1,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -636,12 +627,10 @@ const styles = StyleSheet.create({
   chartTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#2c3e50',
     marginBottom: 5,
   },
   chartSubtitle: {
     fontSize: 13,
-    color: '#7f8c8d',
     marginBottom: 15,
   },
   emptyChart: {
@@ -650,14 +639,13 @@ const styles = StyleSheet.create({
   },
   emptyChartText: {
     fontSize: 14,
-    color: '#95a5a6',
     marginTop: 10,
   },
   summaryCard: {
-    backgroundColor: '#fff',
     borderRadius: 12,
     padding: 20,
     marginBottom: 30,
+    borderWidth: 1,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -667,7 +655,6 @@ const styles = StyleSheet.create({
   summaryTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#2c3e50',
     marginBottom: 15,
   },
   summaryRow: {
@@ -675,15 +662,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#ecf0f1',
   },
   summaryLabel: {
     fontSize: 14,
-    color: '#7f8c8d',
   },
   summaryValue: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#2c3e50',
   },
 });

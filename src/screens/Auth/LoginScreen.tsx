@@ -11,12 +11,13 @@ import {
   ScrollView,
   Alert
 } from 'react-native';
-import { useAuth } from '../../context/AppContext';
+import { useAuth, useTheme } from '../../context/AppContext';
 
 export default function LoginScreen({ navigation }: any) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { login } = useAuth();
+  const { theme } = useTheme();
 
   const handleLogin = () => {
     if (!email || !password) {
@@ -43,38 +44,40 @@ export default function LoginScreen({ navigation }: any) {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}
+      style={[styles.container, { backgroundColor: theme.background }]}
     >
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.logoContainer}>
-          <View style={styles.logoCircle}>
+          <View style={[styles.logoCircle, { backgroundColor: theme.headerBg }]}>
             <Text style={styles.logoText}>✂️</Text>
           </View>
-          <Text style={styles.title}>QuickCut</Text>
-          <Text style={styles.subtitle}>Tu próxima cita a un click</Text>
+          <Text style={[styles.title, { color: theme.text }]}>QuickCut</Text>
+          <Text style={[styles.subtitle, { color: theme.textSecondary }]}>Tu próxima cita a un click</Text>
         </View>
 
         <View style={styles.formContainer}>
-          <Text style={styles.label}>Correo electrónico</Text>
+          <Text style={[styles.label, { color: theme.text }]}>Correo electrónico</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { backgroundColor: theme.surface, color: theme.text, borderColor: theme.border }]}
             placeholder="tu@email.com"
+            placeholderTextColor={theme.textSecondary}
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
             autoCapitalize="none"
           />
 
-          <Text style={styles.label}>Contraseña</Text>
+          <Text style={[styles.label, { color: theme.text }]}>Contraseña</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { backgroundColor: theme.surface, color: theme.text, borderColor: theme.border }]}
             placeholder="••••••••"
+            placeholderTextColor={theme.textSecondary}
             value={password}
             onChangeText={setPassword}
             secureTextEntry
           />
 
-          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+          <TouchableOpacity style={[styles.loginButton, { backgroundColor: theme.primary }]} onPress={handleLogin}>
             <Text style={styles.loginButtonText}>Iniciar Sesión</Text>
           </TouchableOpacity>
 
@@ -82,29 +85,29 @@ export default function LoginScreen({ navigation }: any) {
             style={styles.registerButton}
             onPress={() => navigation.navigate('Register')}
           >
-            <Text style={styles.registerButtonText}>
+            <Text style={[styles.registerButtonText, { color: theme.primary }]}>
               ¿No tienes cuenta? Regístrate
             </Text>
           </TouchableOpacity>
 
           <View style={styles.divider}>
-            <View style={styles.dividerLine} />
-            <Text style={styles.dividerText}>Acceso rápido de prueba</Text>
-            <View style={styles.dividerLine} />
+            <View style={[styles.dividerLine, { backgroundColor: theme.divider }]} />
+            <Text style={[styles.dividerText, { color: theme.textSecondary }]}>Acceso rápido de prueba</Text>
+            <View style={[styles.dividerLine, { backgroundColor: theme.divider }]} />
           </View>
 
           <TouchableOpacity
-            style={styles.quickLoginButton}
+            style={[styles.quickLoginButton, { backgroundColor: theme.surface, borderColor: theme.primary, borderWidth: 1 }]}
             onPress={fillClientCredentials}
           >
-            <Text style={styles.quickLoginText}>👤 Cargar datos de Cliente</Text>
+            <Text style={[styles.quickLoginText, { color: theme.primary }]}>👤 Cargar datos de Cliente</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.quickLoginButton, styles.barberQuickLogin]}
+            style={[styles.quickLoginButton, styles.barberQuickLogin, { backgroundColor: theme.surface, borderColor: theme.primary, borderWidth: 1 }]}
             onPress={fillBarberCredentials}
           >
-            <Text style={styles.quickLoginText}>✂️ Cargar datos de Barbero</Text>
+            <Text style={[styles.quickLoginText, { color: theme.primary }]}>✂️ Cargar datos de Barbero</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

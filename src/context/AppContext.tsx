@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 import { User, Appointment } from '../types';
 import { mockUsers, allAppointments } from '../data/mockData';
+import { lightTheme, darkTheme, ThemeType } from '../theme/colors';
 
 interface AuthContextType {
   user: User | null;
@@ -18,8 +19,15 @@ interface AppointmentContextType {
   getBarberAppointments: (barberId: string) => Appointment[];
 }
 
+interface ThemeContextType {
+  isDark: boolean;
+  theme: ThemeType;
+  toggleTheme: () => void;
+}
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const AppointmentContext = createContext<AppointmentContextType | undefined>(undefined);
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 // Provider de autenticación
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -133,6 +141,36 @@ export const useAppointments = () => {
   const context = useContext(AppointmentContext);
   if (context === undefined) {
     throw new Error('useAppointments debe usarse dentro de AppointmentProvider');
+  }
+  return context;
+};
+
+// Provider de tema
+export const ThemeProvider = ({ children }: { children: ReactNode }) => {
+  const [isDark, setIsDark] = useState(false);
+  const theme = isDark ? darkTheme : lightTheme;
+
+  const toggleTheme = () => {
+    setIsDark(!isDark);
+  };
+
+  return (
+    <ThemeContext.Provider
+      value={{
+        isDark,
+        theme,
+        toggleTheme
+      }}
+    >
+      {children}
+    </ThemeContext.Provider>
+  );
+};
+
+export const useTheme = () => {
+  const context = useContext(ThemeContext);
+  if (context === undefined) {
+    throw new Error('useTheme debe usarse dentro de ThemeProvider');
   }
   return context;
 };

@@ -227,7 +227,7 @@ export const mockAppointments: Appointment[] = [
     barbershopName: 'Barbería El Clásico',
     serviceId: '2',
     serviceName: 'Premium',
-    date: '2025-12-05',
+    date: '2026-03-20',
     time: '10:00',
     status: 'confirmed',
     price: 300
@@ -243,13 +243,13 @@ export const mockAppointments: Appointment[] = [
     barbershopName: 'Barbería El Clásico',
     serviceId: '1',
     serviceName: 'Corte',
-    date: '2025-12-08',
+    date: '2026-03-25',
     time: '15:00',
     status: 'pending',
     price: 150
   },
   
-  // SEMANA ACTUAL (1-7 Diciembre 2025) - Completadas
+  // SEMANA ACTUAL (15-17 Marzo 2026) - Completadas
   {
     id: '3',
     clientId: '4',
@@ -261,7 +261,7 @@ export const mockAppointments: Appointment[] = [
     barbershopName: 'Barbería El Clásico',
     serviceId: '2',
     serviceName: 'Premium',
-    date: '2025-12-01',
+    date: '2026-03-15',
     time: '10:00',
     status: 'completed',
     price: 300
@@ -277,7 +277,7 @@ export const mockAppointments: Appointment[] = [
     barbershopName: 'Barbería El Clásico',
     serviceId: '2',
     serviceName: 'Premium',
-    date: '2025-12-01',
+    date: '2026-03-15',
     time: '14:00',
     status: 'completed',
     price: 300
@@ -293,7 +293,7 @@ export const mockAppointments: Appointment[] = [
     barbershopName: 'Barbería El Clásico',
     serviceId: '1',
     serviceName: 'Corte',
-    date: '2025-12-02',
+    date: '2026-03-16',
     time: '11:00',
     status: 'completed',
     price: 150
@@ -309,7 +309,7 @@ export const mockAppointments: Appointment[] = [
     barbershopName: 'Barbería El Clásico',
     serviceId: '3',
     serviceName: 'Exfoliación',
-    date: '2025-12-02',
+    date: '2026-03-16',
     time: '16:00',
     status: 'completed',
     price: 120
@@ -325,7 +325,7 @@ export const mockAppointments: Appointment[] = [
     barbershopName: 'Barbería El Clásico',
     serviceId: '2',
     serviceName: 'Premium',
-    date: '2025-12-03',
+    date: '2026-03-17',
     time: '10:30',
     status: 'completed',
     price: 300
@@ -341,7 +341,7 @@ export const mockAppointments: Appointment[] = [
     barbershopName: 'Barbería El Clásico',
     serviceId: '1',
     serviceName: 'Corte',
-    date: '2025-12-03',
+    date: '2026-03-17',
     time: '15:00',
     status: 'completed',
     price: 150
@@ -357,7 +357,7 @@ export const mockAppointments: Appointment[] = [
     barbershopName: 'Barbería El Clásico',
     serviceId: '3',
     serviceName: 'Exfoliación',
-    date: '2025-12-04',
+    date: '2026-03-17',
     time: '09:00',
     status: 'completed',
     price: 120
@@ -373,13 +373,13 @@ export const mockAppointments: Appointment[] = [
     barbershopName: 'Barbería El Clásico',
     serviceId: '2',
     serviceName: 'Premium',
-    date: '2025-12-04',
+    date: '2026-03-17',
     time: '12:00',
     status: 'completed',
     price: 300
   },
 
-  // SEMANA ANTERIOR (24-30 Noviembre 2025) - Completadas
+  // SEMANA ANTERIOR (8-14 Marzo 2026) - Completadas
   {
     id: '11',
     clientId: '4',
@@ -391,7 +391,7 @@ export const mockAppointments: Appointment[] = [
     barbershopName: 'Barbería El Clásico',
     serviceId: '1',
     serviceName: 'Corte',
-    date: '2025-11-24',
+    date: '2026-03-09',
     time: '10:00',
     status: 'completed',
     price: 150
@@ -407,7 +407,7 @@ export const mockAppointments: Appointment[] = [
     barbershopName: 'Barbería El Clásico',
     serviceId: '2',
     serviceName: 'Premium',
-    date: '2025-11-25',
+    date: '2026-03-10',
     time: '11:00',
     status: 'completed',
     price: 300
@@ -423,7 +423,7 @@ export const mockAppointments: Appointment[] = [
     barbershopName: 'Barbería El Clásico',
     serviceId: '3',
     serviceName: 'Exfoliación',
-    date: '2025-11-26',
+    date: '2026-03-11',
     time: '14:00',
     status: 'completed',
     price: 120
@@ -439,7 +439,7 @@ export const mockAppointments: Appointment[] = [
     barbershopName: 'Barbería El Clásico',
     serviceId: '1',
     serviceName: 'Corte',
-    date: '2025-11-27',
+    date: '2026-03-12',
     time: '16:00',
     status: 'completed',
     price: 150
@@ -455,7 +455,7 @@ export const mockAppointments: Appointment[] = [
     barbershopName: 'Barbería El Clásico',
     serviceId: '2',
     serviceName: 'Premium',
-    date: '2025-11-28',
+    date: '2026-03-13',
     time: '10:00',
     status: 'completed',
     price: 300
@@ -471,13 +471,13 @@ export const mockAppointments: Appointment[] = [
     barbershopName: 'Barbería El Clásico',
     serviceId: '3',
     serviceName: 'Exfoliación',
-    date: '2025-11-29',
+    date: '2026-03-14',
     time: '12:00',
     status: 'completed',
     price: 120
   },
 
-  // MES ACTUAL (Noviembre 2025) - Más citas completadas
+  // MES ACTUAL (Marzo 2026) - Más citas completadas
   {
     id: '17',
     clientId: '10',
@@ -489,7 +489,7 @@ export const mockAppointments: Appointment[] = [
     barbershopName: 'Barbería El Clásico',
     serviceId: '2',
     serviceName: 'Premium',
-    date: '2025-11-15',
+    date: '2026-03-01',
     time: '10:00',
     status: 'completed',
     price: 300
@@ -505,7 +505,7 @@ export const mockAppointments: Appointment[] = [
     barbershopName: 'Barbería El Clásico',
     serviceId: '1',
     serviceName: 'Corte',
-    date: '2025-11-16',
+    date: '2026-03-02',
     time: '14:00',
     status: 'completed',
     price: 150
@@ -521,7 +521,7 @@ export const mockAppointments: Appointment[] = [
     barbershopName: 'Barbería El Clásico',
     serviceId: '2',
     serviceName: 'Premium',
-    date: '2025-11-18',
+    date: '2026-03-04',
     time: '11:00',
     status: 'completed',
     price: 300
@@ -537,7 +537,7 @@ export const mockAppointments: Appointment[] = [
     barbershopName: 'Barbería El Clásico',
     serviceId: '3',
     serviceName: 'Exfoliación',
-    date: '2025-11-20',
+    date: '2026-03-06',
     time: '15:00',
     status: 'completed',
     price: 120
@@ -553,7 +553,7 @@ export const mockAppointments: Appointment[] = [
     barbershopName: 'Barbería El Clásico',
     serviceId: '1',
     serviceName: 'Corte',
-    date: '2025-11-22',
+    date: '2026-02-22',
     time: '10:30',
     status: 'completed',
     price: 150
@@ -726,7 +726,7 @@ const generateMoreAppointments = () => {
       barbershopName: 'Barbería El Clásico',
       serviceId: '1',
       serviceName: 'Corte',
-      date: `2025-12-0${day}`,
+      date: `2026-03-0${day}`,
       time: `${9 + (i % 10)}:00`,
       status: 'completed',
       price: 150
@@ -748,7 +748,7 @@ const generateMoreAppointments = () => {
       barbershopName: 'Barbería El Clásico',
       serviceId: '2',
       serviceName: 'Premium',
-      date: `2025-12-0${day}`,
+      date: `2026-03-0${day}`,
       time: `${9 + (i % 10)}:00`,
       status: 'completed',
       price: 300
@@ -770,7 +770,7 @@ const generateMoreAppointments = () => {
       barbershopName: 'Barbería El Clásico',
       serviceId: '3',
       serviceName: 'Exfoliación',
-      date: `2025-12-0${day}`,
+      date: `2026-03-0${day}`,
       time: `${9 + (i % 10)}:00`,
       status: 'completed',
       price: 120

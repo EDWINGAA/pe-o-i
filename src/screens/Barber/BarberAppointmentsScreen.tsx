@@ -6,14 +6,17 @@ import {
   FlatList,
   TouchableOpacity,
   Alert,
+  Modal,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useAuth, useAppointments } from '../../context/AppContext';
+import { useAuth, useAppointments, useTheme } from '../../context/AppContext';
 
 export default function BarberAppointmentsScreen() {
   const { user } = useAuth();
   const { getBarberAppointments, updateAppointmentStatus } = useAppointments();
+  const { theme } = useTheme();
   const [filter, setFilter] = useState<'all' | 'pending' | 'confirmed' | 'completed'>('all');
+  const [filterMenuOpen, setFilterMenuOpen] = useState(false);
 
   if (!user) return null;
 
@@ -26,15 +29,15 @@ export default function BarberAppointmentsScreen() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'confirmed':
-        return '#27ae60';
+        return theme.success;
       case 'pending':
-        return '#f39c12';
+        return theme.warning;
       case 'completed':
-        return '#3498db';
+        return theme.primary;
       case 'cancelled':
-        return '#e74c3c';
+        return theme.danger;
       default:
-        return '#95a5a6';
+        return theme.textSecondary;
     }
   };
 
@@ -51,6 +54,17 @@ export default function BarberAppointmentsScreen() {
       default:
         return status;
     }
+  };
+
+  const filterOptions = [
+    { key: 'all', label: 'Todas', icon: 'list' },
+    { key: 'pending', label: 'Pendientes', icon: 'time' },
+    { key: 'confirmed', label: 'Confirmadas', icon: 'checkmark-circle' },
+    { key: 'completed', label: 'Completadas', icon: 'trophy' }
+  ];
+
+  const getFilterLabel = () => {
+    return filterOptions.find(opt => opt.key === filter)?.label || 'Filtro';
   };
 
   const handleConfirm = (appointmentId: string) => {
@@ -97,18 +111,18 @@ export default function BarberAppointmentsScreen() {
   };
 
   const renderAppointment = ({ item }: any) => (
-    <View style={styles.appointmentCard}>
+    <View style={[styles.appointmentCard, { backgroundColor: theme.surface, shadowColor: theme.text }]}>
       <View style={styles.cardHeader}>
         <View style={styles.dateTimeContainer}>
-          <View style={styles.dateBox}>
-            <Text style={styles.dateDay}>{new Date(item.date).getDate()}</Text>
-            <Text style={styles.dateMonth}>
+          <View style={[styles.dateBox, { backgroundColor: theme.primary }]}>
+            <Text style={[styles.dateDay, { color: theme.headerText }]}>{new Date(item.date).getDate()}</Text>
+            <Text style={[styles.dateMonth, { color: theme.headerText }]}>
               {new Date(item.date).toLocaleDateString('es-MX', { month: 'short' })}
             </Text>
           </View>
           <View style={styles.timeBox}>
-            <Ionicons name="time-outline" size={16} color="#7f8c8d" />
-            <Text style={styles.timeText}>{item.time}</Text>
+            <Ionicons name="time-outline" size={16} color={theme.textSecondary} />
+            <Text style={[styles.timeText, { color: theme.text }]}>{item.time}</Text>
           </View>
         </View>
         <View style={[styles.statusBadge, { backgroundColor: getStatusColor(item.status) }]}>
@@ -118,19 +132,19 @@ export default function BarberAppointmentsScreen() {
 
       <View style={styles.cardBody}>
         <View style={styles.clientInfo}>
-          <Text style={styles.clientName}>{item.clientName}</Text>
+          <Text style={[styles.clientName, { color: theme.text }]}>{item.clientName}</Text>
           <View style={styles.infoRow}>
-            <Ionicons name="call-outline" size={14} color="#7f8c8d" />
-            <Text style={styles.infoText}>{item.clientPhone}</Text>
+            <Ionicons name="call-outline" size={14} color={theme.textSecondary} />
+            <Text style={[styles.infoText, { color: theme.textSecondary }]}>{item.clientPhone}</Text>
           </View>
         </View>
 
-        <View style={styles.serviceInfo}>
+        <View style={[styles.serviceInfo, { backgroundColor: theme.surface }]}>
           <View style={styles.infoRow}>
-            <Ionicons name="cut-outline" size={16} color="#3498db" />
-            <Text style={styles.serviceText}>{item.serviceName}</Text>
+            <Ionicons name="cut-outline" size={16} color={theme.primary} />
+            <Text style={[styles.serviceText, { color: theme.text }]}>{item.serviceName}</Text>
           </View>
-          <Text style={styles.priceText}>${item.price}</Text>
+          <Text style={[styles.priceText, { color: theme.text }]}>${item.price}</Text>
         </View>
       </View>
 
@@ -138,13 +152,13 @@ export default function BarberAppointmentsScreen() {
         {item.status === 'pending' && (
           <>
             <TouchableOpacity 
-              style={[styles.actionButton, styles.cancelButton]}
+              style={[styles.actionButton, styles.cancelButton, { backgroundColor: theme.danger }]}
               onPress={() => handleCancel(item.id)}
             >
               <Text style={styles.cancelButtonText}>Rechazar</Text>
             </TouchableOpacity>
             <TouchableOpacity 
-              style={[styles.actionButton, styles.confirmButton]}
+              style={[styles.actionButton, styles.confirmButton, { backgroundColor: theme.success }]}
               onPress={() => handleConfirm(item.id)}
             >
               <Text style={styles.confirmButtonText}>Confirmar</Text>
@@ -153,7 +167,7 @@ export default function BarberAppointmentsScreen() {
         )}
         {item.status === 'confirmed' && (
           <TouchableOpacity 
-            style={[styles.actionButton, styles.completeButton]}
+            style={[styles.actionButton, styles.completeButton, { backgroundColor: theme.primary }]}
             onPress={() => handleComplete(item.id)}
           >
             <Ionicons name="checkmark-circle" size={18} color="#fff" />
@@ -165,53 +179,77 @@ export default function BarberAppointmentsScreen() {
   );
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Mis Citas</Text>
-        <Text style={styles.subtitle}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <View style={[styles.header, { backgroundColor: theme.headerBg }]}>
+        <Text style={[styles.title, { color: theme.headerText }]}>Mis Citas</Text>
+        <Text style={[styles.subtitle, { color: theme.headerText }]}>
           {filteredAppointments.length} cita{filteredAppointments.length !== 1 ? 's' : ''}
         </Text>
       </View>
 
-      <View style={styles.filterContainer}>
-        <TouchableOpacity
-          style={[styles.filterButton, filter === 'all' && styles.activeFilter]}
-          onPress={() => setFilter('all')}
+      <View style={[styles.filterBar, { backgroundColor: theme.background }]}>
+        <TouchableOpacity 
+          style={[styles.filterButton, { backgroundColor: theme.surface, borderColor: theme.border }]}
+          onPress={() => setFilterMenuOpen(true)}
         >
-          <Text style={[styles.filterText, filter === 'all' && styles.activeFilterText]}>
-            Todas
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.filterButton, filter === 'pending' && styles.activeFilter]}
-          onPress={() => setFilter('pending')}
-        >
-          <Text style={[styles.filterText, filter === 'pending' && styles.activeFilterText]}>
-            Pendientes
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.filterButton, filter === 'confirmed' && styles.activeFilter]}
-          onPress={() => setFilter('confirmed')}
-        >
-          <Text style={[styles.filterText, filter === 'confirmed' && styles.activeFilterText]}>
-            Confirmadas
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.filterButton, filter === 'completed' && styles.activeFilter]}
-          onPress={() => setFilter('completed')}
-        >
-          <Text style={[styles.filterText, filter === 'completed' && styles.activeFilterText]}>
-            Completadas
-          </Text>
+          <Ionicons name="funnelsharp" size={20} color={theme.primary} />
+          <Text style={[styles.filterButtonText, { color: theme.text }]}>{getFilterLabel()}</Text>
+          <Ionicons name="chevron-down" size={20} color={theme.textSecondary} />
         </TouchableOpacity>
       </View>
 
+      <Modal
+        visible={filterMenuOpen}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setFilterMenuOpen(false)}
+      >
+        <TouchableOpacity 
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setFilterMenuOpen(false)}
+        >
+          <View style={[styles.filterModal, { backgroundColor: theme.surface }]}>
+            <Text style={[styles.filterModalTitle, { color: theme.text }]}>Filtrar citas</Text>
+            
+            {filterOptions.map((option) => (
+              <TouchableOpacity
+                key={option.key}
+                style={[
+                  styles.filterOption,
+                  { borderBottomColor: theme.divider },
+                  filter === option.key && { backgroundColor: theme.primary + '15' }
+                ]}
+                onPress={() => {
+                  setFilter(option.key as any);
+                  setFilterMenuOpen(false);
+                }}
+              >
+                <Ionicons 
+                  name={option.icon as any} 
+                  size={22} 
+                  color={filter === option.key ? theme.primary : theme.textSecondary}
+                />
+                <Text style={[
+                  styles.filterOptionText,
+                  { color: theme.text },
+                  filter === option.key && { fontWeight: 'bold', color: theme.primary }
+                ]}>
+                  {option.label}
+                </Text>
+                {filter === option.key && (
+                  <Ionicons name="checkmark" size={22} color={theme.primary} />
+                )}
+              </TouchableOpacity>
+            ))}
+          </View>
+        </TouchableOpacity>
+      </Modal>
+
       {filteredAppointments.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <Ionicons name="calendar-outline" size={80} color="#bdc3c7" />
-          <Text style={styles.emptyText}>No hay citas en esta categoría</Text>
+          <Ionicons name="calendar-outline" size={80} color={theme.textSecondary} />
+          <Text style={[styles.emptyText, { color: theme.text }]}>No hay citas en esta categoría</Text>
         </View>
       ) : (
         <FlatList
@@ -244,34 +282,12 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 14,
-    color: '#ecf0f1',
+    color: '#2c3e50',
   },
   filterContainer: {
     flexDirection: 'row',
     padding: 15,
-    backgroundColor: '#fff',
     borderBottomWidth: 1,
-    borderBottomColor: '#ecf0f1',
-  },
-  filterButton: {
-    flex: 1,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    marginHorizontal: 4,
-    borderRadius: 8,
-    backgroundColor: '#f8f9fa',
-    alignItems: 'center',
-  },
-  activeFilter: {
-    backgroundColor: '#3498db',
-  },
-  filterText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#7f8c8d',
-  },
-  activeFilterText: {
-    color: '#fff',
   },
   listContent: {
     padding: 15,
@@ -351,7 +367,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#f8f9fa',
     padding: 12,
     borderRadius: 8,
   },
@@ -362,13 +377,11 @@ const styles = StyleSheet.create({
   infoText: {
     marginLeft: 6,
     fontSize: 13,
-    color: '#7f8c8d',
   },
   serviceText: {
     marginLeft: 8,
     fontSize: 14,
     fontWeight: '600',
-    color: '#2c3e50',
   },
   priceText: {
     fontSize: 18,
@@ -393,7 +406,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   cancelButtonText: {
-    color: '#e74c3c',
+    color: '#fff',
     fontWeight: '600',
   },
   confirmButton: {
@@ -420,7 +433,61 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 16,
-    color: '#7f8c8d',
+    color: '#2c3e50',
     marginTop: 20,
+  },
+  filterBar: {
+    padding: 15,
+    borderBottomWidth: 1,
+  },
+  filterButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 12,
+    borderWidth: 1,
+  },
+  filterButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginHorizontal: 10,
+    flex: 1,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'flex-end',
+  },
+  filterModal: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    paddingTop: 20,
+    paddingHorizontal: 20,
+    maxHeight: '60%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 5,
+  },
+  filterModalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 15,
+  },
+  filterOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 16,
+    paddingHorizontal: 12,
+    borderBottomWidth: 1,
+    borderRadius: 8,
+  },
+  filterOptionText: {
+    fontSize: 16,
+    fontWeight: '500',
+    marginLeft: 12,
+    flex: 1,
   },
 });

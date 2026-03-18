@@ -9,33 +9,35 @@ import {
   ScrollView,
 } from 'react-native';
 import { useAuth } from '../../context/AppContext';
+import { useTheme } from '../../context/AppContext';
 import { mockBarbershops } from '../../data/mockData';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function HomeScreen({ navigation }: any) {
   const { user } = useAuth();
+  const { theme } = useTheme();
 
   if (!user) return null;
 
   const renderBarbershopCard = ({ item }: any) => (
     <TouchableOpacity
-      style={styles.card}
+      style={[styles.card, { backgroundColor: theme.surface, shadowColor: theme.text }]}
       onPress={() => navigation.navigate('BarbershopDetail', { barbershop: item })}
     >
       <Image source={{ uri: item.image }} style={styles.cardImage} />
       <View style={styles.cardContent}>
-        <Text style={styles.cardTitle}>{item.name}</Text>
+        <Text style={[styles.cardTitle, { color: theme.text }]}>{item.name}</Text>
         <View style={styles.ratingContainer}>
           <Ionicons name="star" size={16} color="#f39c12" />
-          <Text style={styles.rating}>{item.rating}</Text>
+          <Text style={[styles.rating, { color: theme.text }]}>{item.rating}</Text>
         </View>
         <View style={styles.infoRow}>
-          <Ionicons name="location-outline" size={14} color="#7f8c8d" />
-          <Text style={styles.infoText}>{item.address}</Text>
+          <Ionicons name="location-outline" size={14} color={theme.textSecondary} />
+          <Text style={[styles.infoText, { color: theme.textSecondary }]}>{item.address}</Text>
         </View>
         <View style={styles.infoRow}>
-          <Ionicons name="time-outline" size={14} color="#7f8c8d" />
-          <Text style={styles.infoText}>
+          <Ionicons name="time-outline" size={14} color={theme.textSecondary} />
+          <Text style={[styles.infoText, { color: theme.textSecondary }]}>
             {item.openTime} - {item.closeTime}
           </Text>
         </View>
@@ -44,35 +46,41 @@ export default function HomeScreen({ navigation }: any) {
   );
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <View style={[styles.header, { backgroundColor: theme.headerBg }]}>
         <View>
-          <Text style={styles.greeting}>Hola, {user?.name}! 👋</Text>
-          <Text style={styles.subtitle}>Encuentra tu barbería ideal</Text>
+          <Text style={[styles.greeting, { color: theme.headerText }]}>Hola, {user?.name}! 👋</Text>
+          <Text style={[styles.subtitle, { color: theme.headerText }]}>Encuentra tu barbería ideal</Text>
         </View>
       </View>
 
       <ScrollView style={styles.content}>
-        <View style={styles.quickActions}>
+        <View style={[styles.quickActions, { backgroundColor: theme.background }]}>
           <TouchableOpacity
-            style={styles.actionButton}
+            style={styles.actionCard}
             onPress={() => navigation.navigate('MyAppointments')}
           >
-            <Ionicons name="calendar" size={24} color="#3498db" />
-            <Text style={styles.actionText}>Mis Citas</Text>
+            <View style={[styles.actionCardIcon, { backgroundColor: theme.primary + '15' }]}>
+              <Ionicons name="calendar" size={32} color={theme.primary} />
+            </View>
+            <Text style={[styles.actionCardText, { color: theme.text }]}>Mis Citas</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.actionButton}>
-            <Ionicons name="heart" size={24} color="#e74c3c" />
-            <Text style={styles.actionText}>Favoritos</Text>
+          <TouchableOpacity style={styles.actionCard}>
+            <View style={[styles.actionCardIcon, { backgroundColor: theme.danger + '15' }]}>
+              <Ionicons name="heart" size={32} color={theme.danger} />
+            </View>
+            <Text style={[styles.actionCardText, { color: theme.text }]}>Favoritos</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.actionButton}>
-            <Ionicons name="ticket" size={24} color="#27ae60" />
-            <Text style={styles.actionText}>Ofertas</Text>
+          <TouchableOpacity style={styles.actionCard}>
+            <View style={[styles.actionCardIcon, { backgroundColor: theme.success + '15' }]}>
+              <Ionicons name="ticket" size={32} color={theme.success} />
+            </View>
+            <Text style={[styles.actionCardText, { color: theme.text }]}>Ofertas</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Barberías Destacadas</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>Barberías Destacadas</Text>
           <FlatList
             data={mockBarbershops}
             renderItem={renderBarbershopCard}
@@ -112,26 +120,28 @@ const styles = StyleSheet.create({
   quickActions: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    padding: 20,
-    backgroundColor: '#fff',
-    marginTop: 15,
-    marginHorizontal: 15,
-    marginBottom: 20,
-    borderRadius: 15,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
+    paddingVertical: 25,
+    paddingHorizontal: 10,
+    marginTop: 10,
+    marginBottom: 10,
   },
-  actionButton: {
+  actionCard: {
     alignItems: 'center',
+    flex: 1,
+    marginHorizontal: 8,
   },
-  actionText: {
-    marginTop: 8,
-    fontSize: 12,
-    color: '#2c3e50',
+  actionCardIcon: {
+    width: 70,
+    height: 70,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  actionCardText: {
+    fontSize: 13,
     fontWeight: '600',
+    textAlign: 'center',
   },
   section: {
     padding: 20,
@@ -186,6 +196,6 @@ const styles = StyleSheet.create({
   infoText: {
     marginLeft: 5,
     fontSize: 13,
-    color: '#7f8c8d',
+    color: '#2c3e50',
   },
 });

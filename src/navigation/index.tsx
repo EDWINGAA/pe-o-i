@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
-import { useAuth } from '../context/AppContext';
+import { useAuth, useTheme } from '../context/AppContext';
 
 // Auth Screens
 import LoginScreen from '../screens/Auth/LoginScreen';
@@ -29,6 +29,7 @@ const Tab = createBottomTabNavigator();
 
 // Client Tab Navigator
 function ClientTabs() {
+  const { theme } = useTheme();
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -45,9 +46,10 @@ function ClientTabs() {
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: '#2c3e50',
-        tabBarInactiveTintColor: '#7f8c8d',
+        tabBarActiveTintColor: theme.primary,
+        tabBarInactiveTintColor: theme.textSecondary,
         headerShown: false,
+        tabBarStyle: { backgroundColor: theme.surface, borderTopColor: theme.divider },
       })}
     >
       <Tab.Screen 
@@ -71,6 +73,7 @@ function ClientTabs() {
 
 // Barber Tab Navigator
 function BarberTabs() {
+  const { theme } = useTheme();
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -87,9 +90,10 @@ function BarberTabs() {
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: '#2c3e50',
-        tabBarInactiveTintColor: '#7f8c8d',
+        tabBarActiveTintColor: theme.primary,
+        tabBarInactiveTintColor: theme.textSecondary,
         headerShown: false,
+        tabBarStyle: { backgroundColor: theme.surface, borderTopColor: theme.divider },
       })}
     >
       <Tab.Screen 
@@ -114,6 +118,7 @@ function BarberTabs() {
 // Main Navigation
 export default function Navigation() {
   const { isAuthenticated, user } = useAuth();
+  const { theme } = useTheme();
 
   return (
     <NavigationContainer>
@@ -136,8 +141,8 @@ export default function Navigation() {
             component={BarbershopDetailScreen}
             options={{ 
               title: 'Detalle',
-              headerStyle: { backgroundColor: '#2c3e50' },
-              headerTintColor: '#fff',
+              headerStyle: { backgroundColor: theme.headerBg },
+              headerTintColor: theme.headerText,
             }}
           />
           <Stack.Screen 
@@ -145,8 +150,8 @@ export default function Navigation() {
             component={BarberProfileScreen}
             options={{ 
               title: 'Perfil del Barbero',
-              headerStyle: { backgroundColor: '#2c3e50' },
-              headerTintColor: '#fff',
+              headerStyle: { backgroundColor: theme.headerBg },
+              headerTintColor: theme.headerText,
             }}
           />
           <Stack.Screen 
@@ -154,8 +159,8 @@ export default function Navigation() {
             component={BookAppointmentScreen}
             options={{ 
               title: 'Agendar Cita',
-              headerStyle: { backgroundColor: '#2c3e50' },
-              headerTintColor: '#fff',
+              headerStyle: { backgroundColor: theme.headerBg },
+              headerTintColor: theme.headerText,
             }}
           />
         </Stack.Navigator>

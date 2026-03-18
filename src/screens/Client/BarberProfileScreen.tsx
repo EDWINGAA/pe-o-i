@@ -9,43 +9,45 @@ import {
   Dimensions,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '../../context/AppContext';
 
 const { width } = Dimensions.get('window');
 
 export default function BarberProfileScreen({ route, navigation }: any) {
   const { barber, barbershop } = route.params;
+  const { theme } = useTheme();
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Image source={{ uri: barber.photo }} style={styles.profilePhoto} />
-        <Text style={styles.name}>{barber.name}</Text>
-        <Text style={styles.specialty}>{barber.specialty}</Text>
+    <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
+      <View style={[styles.header, { backgroundColor: theme.surface }]}>
+        <Image source={{ uri: barber.photo }} style={[styles.profilePhoto, { borderColor: theme.surface }]} />
+        <Text style={[styles.name, { color: theme.text }]}>{barber.name}</Text>
+        <Text style={[styles.specialty, { color: theme.textSecondary }]}>{barber.specialty}</Text>
         
         <View style={styles.statsContainer}>
           <View style={styles.statItem}>
             <Ionicons name="star" size={20} color="#f39c12" />
-            <Text style={styles.statValue}>{barber.rating}</Text>
-            <Text style={styles.statLabel}>Rating</Text>
+            <Text style={[styles.statValue, { color: theme.text }]}>{barber.rating}</Text>
+            <Text style={[styles.statLabel, { color: theme.textSecondary }]}>Rating</Text>
           </View>
           <View style={styles.statItem}>
-            <Ionicons name="time" size={20} color="#3498db" />
-            <Text style={styles.statValue}>{barber.experience}</Text>
-            <Text style={styles.statLabel}>Experiencia</Text>
+            <Ionicons name="time" size={20} color={theme.primary} />
+            <Text style={[styles.statValue, { color: theme.text }]}>{barber.experience}</Text>
+            <Text style={[styles.statLabel, { color: theme.textSecondary }]}>Experiencia</Text>
           </View>
           <View style={styles.statItem}>
-            <Ionicons name="cut" size={20} color="#27ae60" />
-            <Text style={styles.statValue}>500+</Text>
-            <Text style={styles.statLabel}>Cortes</Text>
+            <Ionicons name="cut" size={20} color={theme.success} />
+            <Text style={[styles.statValue, { color: theme.text }]}>500+</Text>
+            <Text style={[styles.statLabel, { color: theme.textSecondary }]}>Cortes</Text>
           </View>
         </View>
       </View>
 
-      <View style={styles.content}>
+      <View style={[styles.content, { backgroundColor: theme.background }]}>
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Portafolio</Text>
-          <Text style={styles.sectionSubtitle}>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>Portafolio</Text>
+          <Text style={[styles.sectionSubtitle, { color: theme.textSecondary }]}>
             Ejemplos de trabajos realizados
           </Text>
           
@@ -63,7 +65,7 @@ export default function BarberProfileScreen({ route, navigation }: any) {
                   source={{ uri: image }}
                   style={[
                     styles.portfolioImage,
-                    selectedImageIndex === index && styles.selectedImage
+                    selectedImageIndex === index && [styles.selectedImage, { borderColor: theme.primary }]
                   ]}
                 />
               </TouchableOpacity>
@@ -79,34 +81,34 @@ export default function BarberProfileScreen({ route, navigation }: any) {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Especialidades</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>Especialidades</Text>
           <View style={styles.tagsContainer}>
-            <View style={styles.tag}>
+            <View style={[styles.tag, { backgroundColor: theme.primary }]}>
               <Text style={styles.tagText}>Fade</Text>
             </View>
-            <View style={styles.tag}>
+            <View style={[styles.tag, { backgroundColor: theme.primary }]}>
               <Text style={styles.tagText}>Barba</Text>
             </View>
-            <View style={styles.tag}>
+            <View style={[styles.tag, { backgroundColor: theme.primary }]}>
               <Text style={styles.tagText}>Clásico</Text>
             </View>
-            <View style={styles.tag}>
+            <View style={[styles.tag, { backgroundColor: theme.primary }]}>
               <Text style={styles.tagText}>Diseño</Text>
             </View>
           </View>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Reseñas</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>Reseñas</Text>
           
-          <View style={styles.reviewCard}>
+          <View style={[styles.reviewCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
             <View style={styles.reviewHeader}>
               <Image
                 source={{ uri: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=100' }}
                 style={styles.reviewerPhoto}
               />
               <View style={styles.reviewerInfo}>
-                <Text style={styles.reviewerName}>Pedro González</Text>
+                <Text style={[styles.reviewerName, { color: theme.text }]}>Pedro González</Text>
                 <View style={styles.reviewRating}>
                   {[1, 2, 3, 4, 5].map((star) => (
                     <Ionicons key={star} name="star" size={14} color="#f39c12" />
@@ -114,19 +116,19 @@ export default function BarberProfileScreen({ route, navigation }: any) {
                 </View>
               </View>
             </View>
-            <Text style={styles.reviewText}>
+            <Text style={[styles.reviewText, { color: theme.textSecondary }]}>
               Excelente servicio, muy profesional y atento. El corte quedó perfecto!
             </Text>
           </View>
 
-          <View style={styles.reviewCard}>
+          <View style={[styles.reviewCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
             <View style={styles.reviewHeader}>
               <Image
                 source={{ uri: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100' }}
                 style={styles.reviewerPhoto}
               />
               <View style={styles.reviewerInfo}>
-                <Text style={styles.reviewerName}>Luis Ramírez</Text>
+                <Text style={[styles.reviewerName, { color: theme.text }]}>Luis Ramírez</Text>
                 <View style={styles.reviewRating}>
                   {[1, 2, 3, 4, 5].map((star) => (
                     <Ionicons key={star} name="star" size={14} color="#f39c12" />
@@ -134,16 +136,16 @@ export default function BarberProfileScreen({ route, navigation }: any) {
                 </View>
               </View>
             </View>
-            <Text style={styles.reviewText}>
+            <Text style={[styles.reviewText, { color: theme.textSecondary }]}>
               Siempre sabe exactamente lo que necesito. Muy recomendado!
             </Text>
           </View>
         </View>
       </View>
 
-      <View style={styles.footer}>
+      <View style={[styles.footer, { backgroundColor: theme.surface, borderTopColor: theme.border }]}>
         <TouchableOpacity
-          style={styles.bookButton}
+          style={[styles.bookButton, { backgroundColor: theme.primary }]}
           onPress={() => navigation.navigate('BookAppointment', { barber, barbershop })}
         >
           <Text style={styles.bookButtonText}>Agendar Cita</Text>
@@ -156,12 +158,10 @@ export default function BarberProfileScreen({ route, navigation }: any) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
   },
   header: {
     alignItems: 'center',
     padding: 30,
-    backgroundColor: '#f8f9fa',
   },
   profilePhoto: {
     width: 120,
@@ -169,17 +169,14 @@ const styles = StyleSheet.create({
     borderRadius: 60,
     marginBottom: 15,
     borderWidth: 4,
-    borderColor: '#fff',
   },
   name: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#2c3e50',
     marginBottom: 5,
   },
   specialty: {
     fontSize: 16,
-    color: '#7f8c8d',
     marginBottom: 20,
   },
   statsContainer: {
@@ -194,12 +191,10 @@ const styles = StyleSheet.create({
   statValue: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#2c3e50',
     marginTop: 8,
   },
   statLabel: {
     fontSize: 12,
-    color: '#7f8c8d',
     marginTop: 4,
   },
   content: {
@@ -211,12 +206,10 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#2c3e50',
     marginBottom: 5,
   },
   sectionSubtitle: {
     fontSize: 14,
-    color: '#7f8c8d',
     marginBottom: 15,
   },
   portfolioScroll: {
@@ -232,7 +225,6 @@ const styles = StyleSheet.create({
   selectedImage: {
     opacity: 1,
     borderWidth: 3,
-    borderColor: '#3498db',
   },
   featuredImage: {
     width: '100%',
@@ -244,7 +236,6 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   tag: {
-    backgroundColor: '#3498db',
     paddingHorizontal: 15,
     paddingVertical: 8,
     borderRadius: 20,
@@ -257,10 +248,10 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   reviewCard: {
-    backgroundColor: '#f8f9fa',
     padding: 15,
     borderRadius: 12,
     marginBottom: 12,
+    borderWidth: 1,
   },
   reviewHeader: {
     flexDirection: 'row',
@@ -278,7 +269,6 @@ const styles = StyleSheet.create({
   reviewerName: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#2c3e50',
     marginBottom: 4,
   },
   reviewRating: {
@@ -286,18 +276,14 @@ const styles = StyleSheet.create({
   },
   reviewText: {
     fontSize: 14,
-    color: '#7f8c8d',
     lineHeight: 20,
   },
   footer: {
     padding: 20,
     paddingBottom: 40,
-    backgroundColor: '#fff',
     borderTopWidth: 1,
-    borderTopColor: '#ecf0f1',
   },
   bookButton: {
-    backgroundColor: '#2c3e50',
     padding: 18,
     borderRadius: 12,
     alignItems: 'center',
