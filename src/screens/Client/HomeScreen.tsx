@@ -114,8 +114,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     padding: 20,
     backgroundColor: '#fff',
-    marginTop: -20,
+    marginTop: 15,
     marginHorizontal: 15,
+    marginBottom: 20,
     borderRadius: 15,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -134,6 +135,7 @@ const styles = StyleSheet.create({
   },
   section: {
     padding: 20,
+    marginTop: 0,
   },
   sectionTitle: {
     fontSize: 20,
